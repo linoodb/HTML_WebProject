@@ -1,0 +1,45 @@
+/* 布局 CSS */
+/* m 为 module */
+/* u 为 ui */
+
+/* 最外围包裹层 */
+/* x 为 max */
+.x-wrap {
+	position: relative;
+	margin: 0 auto;
+	/*width: 1616px; */
+	min-width: 1205px; max-width: 1616px;
+	height: 100%;
+	background-color: gray;
+}
+
+/* 顶部通知条 */
+/* ntf 为 notify */
+.m-ntf {
+	position: absolute;
+	left: 0; top: 0;
+	width: 100%; height: 36px;
+	font: 12px/36px "Microsoft Yahei";
+	background-color: #f3f3f3;
+}
+.m-ntf p {
+	position: absolute;
+	left: 206px;
+}
+.m-ntf a {
+	color: #21a557;
+}
+.m-ntf div {
+	position: absolute;
+	right: 270px;
+}
+.m-ntf .close {
+	display: inline-block;
+	width: 9px; height: 9px;
+	margin-right: 6px;
+	background: url("../res/close.png") no-repeat;
+	cursor: pointer;
+}
+.m-ntf .close-fv {
+	cursor: pointer;
+}

@@ -1,0 +1,10 @@
+/* JS 控制的 CSS */
+
+/* 隐藏 */
+.hidden {
+	display: none;
+}
+/* 显示为block元素 */
+.show-block {
+	display: block;
+}
