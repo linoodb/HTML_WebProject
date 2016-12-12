@@ -1,17 +1,32 @@
-setNotify();
+addNotifyEvent();
+addFollowEvent();
 
-
-// 设置顶部通知条
-function setNotify(){
-	var ntf = document.getElementsByClassName('m-ntf')[0];
-	var ntfClose = ntf.getElementsByClassName('close')[0];
-	var ntfCloseFv = ntf.getElementsByClassName('close-fv')[0];
-	addEvent(ntfClose, 'click', function(event){
-		addClass(ntf, 'hidden');
+// 顶部通知栏事件
+function addNotifyEvent(){
+	var btnNotify = document.getElementById('btn-notify');
+	var btnClose = getElementsByClassName(btnNotify, 'close')[0];
+	var btnCloseFv = getElementsByClassName(btnNotify, 'close-fv')[0];
+	addEvent(btnClose, 'click', function(event){
+		addClass(btnNotify, 'z-hidden');
 	});
-	addEvent(ntfCloseFv, 'click', function(event){
-		addClass(ntf, 'hidden');
-		//处理Cookies，以后不会出现
+	addEvent(btnCloseFv, 'click', function(event){
+		addClass(btnNotify, 'z-hidden');
+		//处理Cookies，以后登录同一账号不会再出现
+	});
+}
+
+//关注按钮事件
+function addFollowEvent(){
+	var btnFollow = document.getElementById('btn-follow');
+	replaceClass.isFollow = false;
+	addEvent(btnFollow, 'click', function(event){
+		//先要判断Cookies，如果没有登录则弹出登录框
+		replaceClass.isFollow = !replaceClass.isFollow;
+		if(replaceClass.isFollow){
+			replaceClass(btnFollow, 'follow', 'un-follow');
+		}else{
+			replaceClass(btnFollow, 'un-follow', 'follow');
+		}
 	});
 }
 

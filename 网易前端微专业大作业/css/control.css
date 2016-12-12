@@ -1,10 +1,28 @@
-/* JS 控制的 CSS */
+/* 通过 JS 控制的 CSS */
+/* z = 状态 */
 
 /* 隐藏 */
-.hidden {
+.z-hidden {
 	display: none;
 }
 /* 显示为block元素 */
-.show-block {
+.z-show-blk {
 	display: block;
+}
+
+/* 关注按钮切换 */
+.un-follow {
+	width: 54px; height: 21px;
+	background: url('../res/html.png') -2px -48px no-repeat;
+}
+.un-follow:hover {
+	background: url('../res/html.png') -58px -48px no-repeat;
+}
+.follow {
+	width: 106px; height: 21px;
+	background: url('../res/html.png') -2px -2px no-repeat;
+}
+.follow:hover {
+	width: 106px; height: 21px;
+	background: url('../res/html.png') -2px -25px no-repeat;
 }

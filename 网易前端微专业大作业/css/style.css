@@ -1,25 +1,22 @@
 /* 布局 CSS */
-/* m 为 module */
-/* u 为 ui */
+/* g = 布局 */
+/* m = 模块 */
 
 /* 最外围包裹层 */
-/* x 为 max */
+/* x = max */
 .x-wrap {
 	position: relative;
 	margin: 0 auto;
-	/*width: 1616px; */
 	min-width: 1205px; max-width: 1616px;
 	height: 100%;
 	background-color: gray;
 }
 
 /* 顶部通知条 */
-/* ntf 为 notify */
+/* ntf = notify */
 .m-ntf {
-	position: absolute;
-	left: 0; top: 0;
-	width: 100%; height: 36px;
-	font: 12px/36px "Microsoft Yahei";
+	height: 36px;
+	font: 12px/36px 'Microsoft Yahei','Arial';
 	background-color: #f3f3f3;
 }
 .m-ntf p {
@@ -37,9 +34,84 @@
 	display: inline-block;
 	width: 9px; height: 9px;
 	margin-right: 6px;
-	background: url("../res/close.png") no-repeat;
+	background: url('../res/html.png') -110px -2px no-repeat;
 	cursor: pointer;
 }
+/* fv = forever */
 .m-ntf .close-fv {
 	cursor: pointer;
 }
+
+/* 头部导航区 */
+.m-header {
+	position: relative;
+	height: 52px;
+	background-color: red;
+}
+/* 标题区 */
+.m-title {
+	/*display: inline-block;*/
+	display: none;
+	position: absolute; left: 206px; bottom: 0px;
+	font-size: 0;
+}
+.m-title .logo {
+	position: relative; top: 7px;
+	font: bold 28px 'GillSansMT','Arial';
+	color: #39a030;
+}
+.m-title .sep {
+	display: inline-block;
+	position: relative; top: 6px;
+	height: 18px;
+	margin-left: 10px; margin-right: 11px;
+	border-left: 1px solid #39a030;
+}
+.m-title h1 {
+	display: inline-block;
+	position: relative; top: 3px;
+	margin-right: 31px;
+	font: 20px 'HirginoSansGB','Arial';
+	color: #333;
+}
+/* fl = follow */
+.m-title .btn-fl {
+	display: inline-block;
+	position: relative; top: 7px;
+	margin-right: 14px;
+	cursor: pointer;
+}
+.m-title .fans {
+	display: inline-block;
+}
+.m-title .fans span {
+	display: inline-block;
+	font: 12px 'simsun','Arial';
+	color: #666;
+}
+.m-title .fans span+span {
+	margin-left: 7px;
+}
+/* 导航区 */
+.m-nav { background-color: pink; }
+.m-nav, .m-nav ul {
+	display: inline-block;
+	font-size: 0;
+}
+.m-nav li {
+	display: inline-block;
+	font: 20px 'HirginoSansGB','Arial';
+}
+.m-nav .btn-search {
+	display: inline-block;
+	width: 19px; height: 19px;
+	background: url('../res/html.png') -2px -71px no-repeat;
+	cursor: pointer;
+}
+.m-nav .btn-search:hover {
+	background: url('../res/html.png') -2px -92px no-repeat;
+}
+
+
+
+
