@@ -2,14 +2,14 @@
 
 {
 	"filename": "btn-close.png",
-	"frame": {"x":110,"y":2,"w":9,"h":9},
+	"frame": {"x":110,"y":26,"w":9,"h":9},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":9,"h":9},
 	"sourceSize": {"w":9,"h":9}
 },
 {
-	"filename": "btn-fl-hov.png",
+	"filename": "btn-follow-hov.png",
 	"frame": {"x":2,"y":25,"w":106,"h":21},
 	"rotated": false,
 	"trimmed": false,
@@ -17,7 +17,7 @@
 	"sourceSize": {"w":106,"h":21}
 },
 {
-	"filename": "btn-fl.png",
+	"filename": "btn-follow.png",
 	"frame": {"x":2,"y":2,"w":106,"h":21},
 	"rotated": false,
 	"trimmed": false,
@@ -25,7 +25,7 @@
 	"sourceSize": {"w":106,"h":21}
 },
 {
-	"filename": "btn-ufl-hov.png",
+	"filename": "btn-unfollow-hov.png",
 	"frame": {"x":58,"y":48,"w":54,"h":21},
 	"rotated": false,
 	"trimmed": false,
@@ -33,7 +33,7 @@
 	"sourceSize": {"w":54,"h":21}
 },
 {
-	"filename": "btn-ufl.png",
+	"filename": "btn-unfollow.png",
 	"frame": {"x":2,"y":48,"w":54,"h":21},
 	"rotated": false,
 	"trimmed": false,
@@ -55,6 +55,22 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
 	"sourceSize": {"w":19,"h":19}
+},
+{
+	"filename": "selector-no.png",
+	"frame": {"x":110,"y":14,"w":10,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
+	"sourceSize": {"w":10,"h":10}
+},
+{
+	"filename": "selector.png",
+	"frame": {"x":110,"y":2,"w":10,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
+	"sourceSize": {"w":10,"h":10}
 }],
 "meta": {
 	"app": "http://www.texturepacker.com",
@@ -63,6 +79,6 @@
 	"format": "RGBA8888",
 	"size": {"w":128,"h":128},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:d47cc6d7c263a94c343411e6e43b7d5d$"
+	"smartupdate": "$TexturePacker:SmartUpdate:dce3aa32f7a5da2a0613b2bff4098a50$"
 }
 }

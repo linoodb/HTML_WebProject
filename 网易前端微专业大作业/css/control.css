@@ -11,18 +11,23 @@
 }
 
 /* 关注按钮切换 */
-.un-follow {
+.m-title .un-follow {
 	width: 54px; height: 21px;
 	background: url('../res/html.png') -2px -48px no-repeat;
 }
-.un-follow:hover {
+.m-title .un-follow:hover {
 	background: url('../res/html.png') -58px -48px no-repeat;
 }
-.follow {
+.m-title .follow {
 	width: 106px; height: 21px;
 	background: url('../res/html.png') -2px -2px no-repeat;
 }
-.follow:hover {
+.m-title .follow:hover {
 	width: 106px; height: 21px;
 	background: url('../res/html.png') -2px -25px no-repeat;
+}
+
+/* 轮播图选择器 */
+.m-slide .selected {
+	background: url('../res/html.png') -110px -2px no-repeat;
 }

@@ -1,96 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <!-- 响应式处理，适应宽屏和窄屏 -->
-        <!-- 适应两种视觉布局尺寸。窗口宽度 < 1205 时，使用小屏视觉布局；窗口宽度 >= 1205 时，使用大屏视觉布局 -->
-        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-        <title>网易云课堂</title>
-        <!-- CSS Reset -->
-        <link rel="stylesheet" type="text/css" href="css/reset.css">
-		<!-- 网页的布局样式 -->
-		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<!-- JS控制的样式，动态修改类名切换样式 -->
-		<link rel="stylesheet" type="text/css" href="css/control.css">
-    </head>
-    <body>
-    	<!-- 最外围包裹层，控制整个网页的居中 -->
-		<div class="x-wrap">
-			<!-- 顶部通知条 -->
-			<div id="btn-notify" class="m-ntf">
-				<p>网易云课堂微专业，帮助你掌握专业技能，令你求职或加薪多一份独特优势！<a href="#">立即查看&gt;</a></p>
-				<div><span class="close"></span><span class="close-fv">不再提示</span></div>
-			</div>
-			<!-- /顶部通知条 -->
+<head>
+    <meta charset="utf-8">
+    <!-- 响应式处理，适应宽屏和窄屏 -->
+    <!-- 适应两种视觉布局尺寸。窗口宽度 < 1205 时，使用小屏视觉布局；窗口宽度 >= 1205 时，使用大屏视觉布局 -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <title>网易云课堂</title>
+    <!-- CSS Reset -->
+    <link rel="stylesheet" type="text/css" href="css/reset.css">
+	<!-- 网页的布局样式 -->
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<!-- JS控制的样式，动态修改类名切换样式 -->
+	<link rel="stylesheet" type="text/css" href="css/control.css">
+</head>
+<body>
+	<!-- 最外围包裹层，控制整个网页的居中 -->
+	<div class="x-wrap">
+		<!-- 顶部通知条 -->
+		<div id="btn-notify" class="m-ntf">
+			<p>网易云课堂微专业，帮助你掌握专业技能，令你求职或加薪多一份独特优势！<a href="#">立即查看&gt;</a></p>
+			<div><span class="close"></span><span class="close-fv">不再提示</span></div>
+		</div>
+		<!-- /顶部通知条 -->
 
-			<!-- 网页头部 -->
-			<div class="g-head">
-				<!-- 头部导航区 -->
-				<div class="m-header">
-					<!-- 标题区 -->
-					<div class="m-title">
-						<span class="logo">EDU</span>
-						<span class="sep"></span>
-						<h1>网易教育产品部</h1>
-						<span id="btn-follow" class="btn-fl un-follow"></span>
-						<div class="fans"><span>粉丝</span><span id="fans">45</span></div>
-					</div>
-					<!-- /标题区 -->
-					<!-- 导航区 -->
-					<div class="m-nav">
-						<ul>
-							<li><a href="http://open.163.com/">网易公开课</a></li>
-							<li><a href="http://study.163.com/">网易云课堂</a></li>
-							<li><a href="http://www.icourse163.org/">中国大学MOOC</a></li>
-						</ul>
-						<span id="search" class="btn-search"></span>
-					</div>
-					<!-- /导航区 -->
+		<!-- 网页头部 -->
+		<div class="g-head">
+			<!-- 头部导航区 -->
+			<div class="m-header">
+				<!-- 标题区 -->
+				<div class="m-title">
+					<span class="logo">EDU</span>
+					<span class="sep"></span>
+					<h1>网易教育产品部</h1>
+					<span id="btn-follow" class="btn-fl un-follow"></span>
+					<div class="fans"><span>粉丝</span><span id="fans">45</span></div>
 				</div>
 				<!-- /标题区 -->
-				<!-- 轮播图 -->
-				<div class="m-slide">
-
+				<!-- 导航区 -->
+				<div class="m-nav">
+					<ul>
+						<li><a href="http://open.163.com/" target="_blank">网易公开课</a></li>
+						<li><a href="http://study.163.com/" target="_blank">网易云课堂</a></li>
+						<li><a href="http://www.icourse163.org/" target="_blank">中国大学MOOC</a></li>
+					</ul>
+					<span id="search" class="btn-search"></span>
 				</div>
-				<!-- /轮播图 -->
-				<!-- 内容区域一 -->
-				<div class="m-section-1">
-
-				</div>
-				<!-- 内容区域一 -->
-				<!-- 内容区域二 -->
-				<div class="m-section-2">
-
-				</div>
-				<!-- 内容区域二 -->
+				<!-- /导航区 -->
 			</div>
-			<!-- /网页头部 -->
-
-			<!-- 网页主体 -->
-			<div class="g-body">
-				<!-- 主栏 -->
-				<div class="g-main">
-
-				</div>
-				<!-- /主栏 -->
-				<!-- 侧栏 -->
-				<div clas="g-side">
-
-				</div>
-				<!-- /侧栏 -->
+			<!-- /标题区 -->
+			<!-- 轮播图 -->
+			<div id="slide" class="m-slide">
+				<!-- <div class="slide"><a href="" target="_blank"><img src="" width="1616px" height="460px"></a></div> -->
+				<div class="slide"><a href="" target="_blank"><img src=""></a></div>
+				<span class="selector"></span>
 			</div>
-			<!-- /网页主体 -->
-
-			<!-- 网页脚部 -->
-			<div class="g-foot">
+			<!-- /轮播图 -->
+			<!-- 内容区域一 -->
+			<div class="m-section-1">
 
 			</div>
-			<!-- /网页脚部 -->
+			<!-- 内容区域一 -->
+			<!-- 内容区域二 -->
+			<div class="m-section-2">
+
+			</div>
+			<!-- 内容区域二 -->
 		</div>
-		<!-- /最外围包裹层 -->
-		<!-- 引入JavaScript -->
-		<script type="text/javascript" src="js/compatibility.js"></script>
-		<script type="text/javascript" src="js/icourse.js"></script>
-		<!-- /引入JavaScript -->
-    </body>
+		<!-- /网页头部 -->
+
+		<!-- 网页主体 -->
+		<div class="g-body">
+			<!-- 主栏 -->
+			<div class="g-main">
+
+			</div>
+			<!-- /主栏 -->
+			<!-- 侧栏 -->
+			<div clas="g-side">
+
+			</div>
+			<!-- /侧栏 -->
+		</div>
+		<!-- /网页主体 -->
+
+		<!-- 网页脚部 -->
+		<div class="g-foot">
+
+		</div>
+		<!-- /网页脚部 -->
+	</div>
+	<!-- /最外围包裹层 -->
+	<!-- 引入JavaScript -->
+	<script type="text/javascript" src="js/compatibility.js"></script>
+	<script type="text/javascript" src="js/mock.js"></script>
+	<script type="text/javascript" src="js/icourse.js"></script>
+	<!-- /引入JavaScript -->
+</body>
 </html>
