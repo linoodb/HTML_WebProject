@@ -11,23 +11,29 @@
 }
 
 /* 关注按钮切换 */
-.m-title .un-follow {
+.m-tt .un-follow {
 	width: 54px; height: 21px;
-	background: url('../res/html.png') -2px -48px no-repeat;
+	background: url('../res/html.png') -2px -25px no-repeat;
 }
-.m-title .un-follow:hover {
-	background: url('../res/html.png') -58px -48px no-repeat;
+.m-tt .un-follow:hover {
+	background: url('../res/html.png') -58px -25px no-repeat;
 }
-.m-title .follow {
+.m-tt .follow {
 	width: 106px; height: 21px;
 	background: url('../res/html.png') -2px -2px no-repeat;
 }
-.m-title .follow:hover {
+.m-tt .follow:hover {
 	width: 106px; height: 21px;
-	background: url('../res/html.png') -2px -25px no-repeat;
+	background: url('../res/html.png') -110px -2px no-repeat;
 }
 
 /* 轮播图选择器 */
-.m-slide .selected {
-	background: url('../res/html.png') -110px -2px no-repeat;
+.m-sld .selected {
+	background: url('../res/html.png') -240px -2px no-repeat;
+}
+
+/* 选项卡 */
+.m-tab .selected {
+	background-color: #39a030;
+	color: #fff;
 }

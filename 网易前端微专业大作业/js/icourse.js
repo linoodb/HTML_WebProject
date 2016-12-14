@@ -6,6 +6,8 @@ var isSlideMove = true; //控制是否进行轮播
 var timeID = null; //时间计时器ID
 var animationID = null; //动画时间计时器ID
 var delayID = null; //延迟计时器ID
+var designTab = null; //产品设计选项卡
+var programTab = null; //编程语言选项卡
 
 init();
 
@@ -15,7 +17,8 @@ function init(){
 	addNotifyEvent();
 	addFollowEvent();
 	addSlideEvent();
-	// setSlideAnimation();
+	setSlideAnimation();
+	addTabEvent();
 }
 
 //初始化界面
@@ -27,9 +30,12 @@ function initUI(){
 function initSlide(){
 	slideContainer = document.getElementById('slide');
 	slideSelector = getElementsByClassName(slideContainer, 'selector')[0];
-	slideDate = JSON.parse(SLIDE);
+	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
+	slideDate = JSON.parse(SLIDE_DATE);
 
+	//设置轮播图选项，默认开始选中第一项
 	setSlideItem(0);
+	//创建轮播图选择器
 	createSlideSelector();
 }
 
@@ -96,7 +102,6 @@ function addSlideEvent(){
 	addEvent(img, 'mouseenter', function(event){
 		isSlideMove = false;
 	});
-
 	//移出轮播图事件
 	addEvent(img, 'mouseleave', function(event){
 		isSlideMove = true;
@@ -107,11 +112,11 @@ function addSlideEvent(){
 		event = event || window.event;
 		event.target = event.target || event.srcElement;
 
-		//是否点击在选择器上
+		//是否点击在选择器上（有可能点击到ul上造成无法获得索引值）
 		if(!hasClass(event.target, 'selector')){
-			//点击的选择器
+			//获取点击选择器的索引
 			var clickSlide = parseInt(event.target.getAttribute('dataset'));
-			//点击当前选中项无效
+			//如果点击在当前播放的索引项，则无效
 			if(curSlide !== clickSlide){
 				curSlide = clickSlide;
 				//清空所有计时器
@@ -120,7 +125,7 @@ function addSlideEvent(){
 				clearTimeout(delayID);
 				//切换页面
 				goToSlide(curSlide);
-				//等待切换完毕后，重新计时
+				//因为切换有动画延迟，所以需要加上切换时间的定时器，等待切换完毕后，重新计时
 				delayID = setTimeout(setSlideAnimation, slideDate.animationTime);
 			}
 		}
@@ -135,7 +140,7 @@ function setSlideAnimation(){
 		if(!isSlideMove) return;
 		//索引加一，超过索引则重置
 		curSlide = (curSlide < slideDate.total - 1) ? curSlide + 1 : 0;
-		//切换
+		//切换到某一页
 		goToSlide(curSlide);
 	}, slideDate.time);
 }
@@ -163,21 +168,27 @@ function setSelector(){
 //切换动画
 function playSlideAnimation(){
 	var opacity = 0; //透明度
-    var loop = 100; //计时器间隔（毫秒）
+    var loop = 100; //计时器间隔（毫秒），时间越短运行次数越多（可设置），不会影响到总时长
     var curTime = 0; //当前运行的总时长
     var totalTime = slideDate.animationTime; //总运行时长
 
     //初始化图片透明度
     var img = slideContainer.querySelector('img');
-    img.style.opacity = 0;
-    img.style.filter = 'alpha(opacity=0)'; //兼容IE8
+    if(window.getComputedStyle){
+    	img.style.opacity = 0;
+    }else{
+    	img.style.filter = 'alpha(opacity=0)'; //兼容IE8
+    }
 
     //淡入计时器
 	animationID = setInterval(function(){
 		//通过比例获得每次需要增加的透明度
         opacity += loop / totalTime;
-        img.style.opacity = opacity;
-        img.style.filter = 'alpha(opacity' + opacity + ')'; //兼容IE8
+        if(window.getComputedStyle){
+        	img.style.opacity = opacity;
+        }else{
+        	img.style.filter = 'alpha(opacity' + (opacity * 100) + ')'; //兼容IE8
+        }
         //计算总时长
         curTime += loop;
         //超过或等于总时长移除计时器
@@ -187,4 +198,29 @@ function playSlideAnimation(){
 	}, loop);
 }
 
+//选项卡事件
+function addTabEvent(){
+	var tab = document.getElementById('tab');
+	designTab = getElementsByClassName(tab, 'design')[0];
+	programTab = getElementsByClassName(tab, 'program')[0];
+	addEvent(tab, 'click', function(event){
+		event = event || window.event;
+		event.target = event.target || event.srcElement;
+		//先重置所有样式
+		removeClass(designTab, 'selected');
+		removeClass(programTab, 'selected');
+		//再单独设置样式
+		if(hasClass(event.target, 'design')){
+			addClass(designTab, 'selected');
+			//获取课程信息
+
+
+		}else if(hasClass(event.target, 'program')){
+			addClass(programTab, 'selected');
+			//获取课程信息
+
+
+		}
+	});
+}
 

@@ -2,7 +2,7 @@
 
 {
 	"filename": "btn-close.png",
-	"frame": {"x":110,"y":26,"w":9,"h":9},
+	"frame": {"x":239,"y":38,"w":9,"h":9},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":9,"h":9},
@@ -10,7 +10,7 @@
 },
 {
 	"filename": "btn-follow-hov.png",
-	"frame": {"x":2,"y":25,"w":106,"h":21},
+	"frame": {"x":110,"y":2,"w":106,"h":21},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":106,"h":21},
@@ -26,7 +26,7 @@
 },
 {
 	"filename": "btn-unfollow-hov.png",
-	"frame": {"x":58,"y":48,"w":54,"h":21},
+	"frame": {"x":58,"y":25,"w":54,"h":21},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":54,"h":21},
@@ -34,15 +34,55 @@
 },
 {
 	"filename": "btn-unfollow.png",
-	"frame": {"x":2,"y":48,"w":54,"h":21},
+	"frame": {"x":2,"y":25,"w":54,"h":21},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":54,"h":21},
 	"sourceSize": {"w":54,"h":21}
 },
 {
+	"filename": "p-frame.png",
+	"frame": {"x":196,"y":41,"w":40,"h":18},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":18},
+	"sourceSize": {"w":40,"h":18}
+},
+{
+	"filename": "p-icon.png",
+	"frame": {"x":239,"y":26,"w":9,"h":10},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":9,"h":10},
+	"sourceSize": {"w":9,"h":10}
+},
+{
+	"filename": "product-1.png",
+	"frame": {"x":2,"y":131,"w":80,"h":80},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":80},
+	"sourceSize": {"w":80,"h":80}
+},
+{
+	"filename": "product-2.png",
+	"frame": {"x":114,"y":25,"w":80,"h":80},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":80},
+	"sourceSize": {"w":80,"h":80}
+},
+{
+	"filename": "product-3.png",
+	"frame": {"x":2,"y":49,"w":80,"h":80},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":80},
+	"sourceSize": {"w":80,"h":80}
+},
+{
 	"filename": "search-hov.png",
-	"frame": {"x":2,"y":92,"w":19,"h":19},
+	"frame": {"x":84,"y":48,"w":19,"h":19},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
@@ -50,7 +90,7 @@
 },
 {
 	"filename": "search.png",
-	"frame": {"x":2,"y":71,"w":19,"h":19},
+	"frame": {"x":218,"y":20,"w":19,"h":19},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":19},
@@ -58,7 +98,7 @@
 },
 {
 	"filename": "selector-no.png",
-	"frame": {"x":110,"y":14,"w":10,"h":10},
+	"frame": {"x":240,"y":14,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -66,19 +106,27 @@
 },
 {
 	"filename": "selector.png",
-	"frame": {"x":110,"y":2,"w":10,"h":10},
+	"frame": {"x":240,"y":2,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
 	"sourceSize": {"w":10,"h":10}
+},
+{
+	"filename": "weibo.png",
+	"frame": {"x":218,"y":2,"w":20,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":16},
+	"sourceSize": {"w":20,"h":16}
 }],
 "meta": {
 	"app": "http://www.texturepacker.com",
 	"version": "1.0",
 	"image": "html.png",
 	"format": "RGBA8888",
-	"size": {"w":128,"h":128},
+	"size": {"w":256,"h":256},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:dce3aa32f7a5da2a0613b2bff4098a50$"
+	"smartupdate": "$TexturePacker:SmartUpdate:ec5a4738c82c28cc6c69c8a07ed80350$"
 }
 }
