@@ -13,15 +13,15 @@ SLIDE_DATE = '{\
 	"date":[\
 		{\
 			"url":"http://open.163.com/",\
-			"src":"res/banner/banner-1.jpg"\
+			"src":"res/banner/slide-1.jpg"\
 		},\
 		{\
 			"url":"http://study.163.com/",\
-			"src":"res/banner/banner-2.jpg"\
+			"src":"res/banner/slide-2.jpg"\
 		},\
 		{\
 			"url":"http://www.icourse163.org/",\
-			"src":"res/banner/banner-3.jpg"\
+			"src":"res/banner/slide-3.jpg"\
 		}\
 	]\
 }';

@@ -13,23 +13,23 @@
 /* 关注按钮切换 */
 .m-tt .un-follow {
 	width: 54px; height: 21px;
-	background: url('../res/html.png') -2px -25px no-repeat;
+	background: url('../res/sprite.png') -2px -25px no-repeat;
 }
 .m-tt .un-follow:hover {
-	background: url('../res/html.png') -58px -25px no-repeat;
+	background: url('../res/sprite.png') -58px -25px no-repeat;
 }
 .m-tt .follow {
 	width: 106px; height: 21px;
-	background: url('../res/html.png') -2px -2px no-repeat;
+	background: url('../res/sprite.png') -2px -2px no-repeat;
 }
 .m-tt .follow:hover {
 	width: 106px; height: 21px;
-	background: url('../res/html.png') -110px -2px no-repeat;
+	background: url('../res/sprite.png') -110px -2px no-repeat;
 }
 
 /* 轮播图选择器 */
 .m-sld .selected {
-	background: url('../res/html.png') -240px -2px no-repeat;
+	background: url('../res/sprite.png') -240px -2px no-repeat;
 }
 
 /* 选项卡 */

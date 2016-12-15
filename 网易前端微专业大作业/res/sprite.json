@@ -57,8 +57,24 @@
 	"sourceSize": {"w":9,"h":10}
 },
 {
+	"filename": "play-hov.png",
+	"frame": {"x":2,"y":189,"w":46,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":46,"h":46},
+	"sourceSize": {"w":46,"h":46}
+},
+{
+	"filename": "play.png",
+	"frame": {"x":196,"y":61,"w":46,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":46,"h":46},
+	"sourceSize": {"w":46,"h":46}
+},
+{
 	"filename": "product-1.png",
-	"frame": {"x":2,"y":131,"w":80,"h":80},
+	"frame": {"x":84,"y":107,"w":80,"h":80},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":80},
@@ -123,10 +139,10 @@
 "meta": {
 	"app": "http://www.texturepacker.com",
 	"version": "1.0",
-	"image": "html.png",
+	"image": "sprite.png",
 	"format": "RGBA8888",
 	"size": {"w":256,"h":256},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:ec5a4738c82c28cc6c69c8a07ed80350$"
+	"smartupdate": "$TexturePacker:SmartUpdate:1d3d41e9c83618b2a86cd9ffa58d8c4c$"
 }
 }

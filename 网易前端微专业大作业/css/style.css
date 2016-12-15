@@ -36,7 +36,7 @@
 .m-ntf .close {
 	display: inline-block;
 	width: 9px; height: 9px;
-	background: url('../res/html.png') -239px -38px no-repeat;
+	background: url('../res/sprite.png') -239px -38px no-repeat;
 	cursor: pointer;
 }
 /* fv = forever */
@@ -46,6 +46,7 @@
 	cursor: pointer;
 }
 
+/* 网页头部 */
 /* 头部导航区 */
 /* hdr = header */
 .m-hdr {
@@ -126,11 +127,11 @@
 	position: relative; top: 7px;
 	width: 19px; height: 19px;
 	margin-left: 30px;
-	background: url('../res/html.png') -218px -20px no-repeat;
+	background: url('../res/sprite.png') -218px -20px no-repeat;
 	cursor: pointer;
 }
 .m-nav .btn-search:hover {
-	background: url('../res/html.png') -84px -48px no-repeat;
+	background: url('../res/sprite.png') -84px -48px no-repeat;
 }
 /* 轮播图 */
 /* sld = slide */
@@ -154,7 +155,7 @@
 .m-sld i {
 	display: inline-block;
 	width: 10px; height: 10px;
-	background: url('../res/html.png') -240px -14px no-repeat;
+	background: url('../res/sprite.png') -240px -14px no-repeat;
 	cursor: pointer;
 }
 .m-sld i+i {
@@ -177,13 +178,13 @@
 	width: 80px; height: 80px;
 }
 .m-stn .icon-1 {
-	background: url('../res/html.png') -2px -131px no-repeat;
+	background: url('../res/sprite.png') -84px -107px no-repeat;
 }
 .m-stn .icon-2 {
-	background: url('../res/html.png') -114px -25px no-repeat;
+	background: url('../res/sprite.png') -114px -25px no-repeat;
 }
 .m-stn .icon-3 {
-	background: url('../res/html.png') -2px -49px no-repeat;
+	background: url('../res/sprite.png') -2px -49px no-repeat;
 }
 .m-stn .content {
 	position: relative; top: -13px;
@@ -208,11 +209,10 @@
 	text-decoration: underline;
 }
 
-/* 主体 */
+/* 网页主体 */
 .g-body {
 	background-color: #f8f8f8;
 }
-
 /* 广告区域 */
 /* ad = advertise */
 .m-ad {
@@ -234,30 +234,135 @@
 	margin-left: 4px;
 }
 .m-ad .item-1 {
-	background: url('../res/environment/environment-1.jpg') 0 0 no-repeat;
+	background: url('../res/banner/ad-1.jpg') 0 0 no-repeat;
 }
 .m-ad .item-2 {
-	background: url('../res/environment/environment-2.jpg') 0 0 no-repeat;
+	background: url('../res/banner/ad-2.jpg') 0 0 no-repeat;
 }
 .m-ad .item-3 {
-	background: url('../res/environment/environment-3.jpg') 0 0 no-repeat;
+	background: url('../res/banner/ad-3.jpg') 0 0 no-repeat;
 }
 .m-ad .item-4 {
-	background: url('../res/environment/environment-4.jpg') 0 0 no-repeat;
+	background: url('../res/banner/ad-4.jpg') 0 0 no-repeat;
 }
 .m-ad .item-5 {
-	background: url('../res/environment/environment-5.jpg') 0 0 no-repeat;
+	background: url('../res/banner/ad-5.jpg') 0 0 no-repeat;
 }
-
+/* 主内容区域 */
+.g-main {
+	width: 80%;
+	margin: 0 auto;
+}
+/* 侧栏 */
+.m-side {
+	float: right;
+}
+/* 机构介绍视频 */
+/* vdo = video */
+.m-vdo {
+	position: relative;
+	width: 223px;
+	margin-bottom: 21px;
+	background-color: #fff;
+	box-shadow: 1px 0 0 0 #ecebeb, 0 1px 1px 0 #d4d3d3, -1px 0 0 0 #ecebeb;
+}
+.m-vdo:hover {
+	box-shadow: 2px 0 2px 0 #ecebeb, 0 4px 4px 0 #d4d3d3, -2px 0 2px 0 #ecebeb;
+}
+.m-vdo h2 {
+	height: 55px;
+	padding-left: 20px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #ddd;
+	font: 16px/55px 'Microsoft Yahei','Arial';
+	color: #333;
+}
+.m-vdo p {
+	padding-left: 22px;
+	margin-bottom: 9px;
+	font: 14px/14px 'Microsoft Yahei','Arial';
+	color: #666;
+}
+.m-vdo .img {
+	position: relative; left: 22px;
+	width: 180px; height: 110px;
+	padding-bottom: 20px;
+	background: url('../res/banner/video.jpg') 0 0 no-repeat;
+	text-align: center;
+	cursor: pointer;
+}
+.m-vdo .play {
+	display: inline-block;
+	position: relative; top: 32px;
+	width: 46px; height: 46px;
+	background: url('../res/sprite.png') -196px -61px no-repeat;
+}
+.m-vdo .img:hover .play{
+	background: url('../res/sprite.png') -2px -189px no-repeat;
+}
+/* 课程排行榜 */
+.m-top {
+	position: relative;
+	width: 223px;
+	background-color: #fff;
+	box-shadow: 1px 0 0 0 #ecebeb, 0 1px 1px 0 #d4d3d3, -1px 0 0 0 #ecebeb;
+}
+.m-top:hover {
+	box-shadow: 2px 0 2px 0 #ecebeb, 0 4px 4px 0 #d4d3d3, -2px 0 2px 0 #ecebeb;
+}
+.m-top h2 {
+	height: 56px;
+	padding-left: 20px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #ddd;
+	font: 16px/56px 'Microsoft Yahei','Arial';
+	color: #333;
+}
+.m-top .item {
+	margin: 20px;
+}
+.m-top .img {
+	float: left;
+	display: inline-block;
+	width: 50px; height: 50px;
+	background: url('../res/demo2.jpg') 0 0 no-repeat;
+}
+.m-top .content {
+	position: relative; top: -2px;
+	margin-left: 62px;
+}
+.m-top .name {
+	margin-bottom: 13px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+  	white-space: nowrap;
+  	font: 14px/14px 'Microsoft Yahei','Arial';
+  	color: #333;
+}
+.m-top .icon {
+	display: inline-block;
+	width: 9px; height: 10px;
+	background: url('../res/sprite.png') -239px -26px no-repeat;
+}
+.m-top .learner {
+	margin-left: 6px;
+	font: 12px/12px 'Microsoft Yahei','Arial';
+	color: #999;
+}
 /* 主栏 */
+.m-main {
+	position: relative; top: -3px;
+	overflow: hidden;
+}
 /* 选项卡 */
 .m-tab {
 	display: inline-block;
-	margin-left: 205px; margin-bottom: 29px;
+	margin-bottom: 29px;
 	font-size: 0;
+	box-shadow: 1px 0 0 1px #ecebeb, 0 1px 2px 1px #d4d3d3, -1px 0 0 1px #ecebeb;
 }
 .m-tab:hover {
-	box-shadow: -1px 0 0 0 #ecebeb, 0 1px 2px 0 #d4d3d3, 1px 0 0 0 #ecebeb;
+	box-shadow: 0 2px 2px 2px #d4d3d3;
 }
 .m-tab h2 {
 	display: inline-block;
@@ -267,13 +372,14 @@
 	text-align: center;
 	cursor: pointer;
 }
-
 /* 课程列表 */
-.m-list {
-	margin-left: 184px;
-}
 .m-list ul {
+	margin-left: -20px;
 	font-size: 0;
+}
+.m-list a {
+	display: block;
+	height: 100%;
 }
 .m-list li {
 	display: inline-block;
@@ -293,9 +399,17 @@
 }
 .m-list img {
 	transition: all 1s;
+	-webkit-transition: all 1s;
+	-moz-transition: all 1s;
+	-o-transition: all 1s;
+	-ms-transition: all 1s;
 }
 .m-list li:hover img {
 	transform: scale(1.2);
+	-webkit-transform: scale(1.2);
+	-moz-transform: scale(1.2);
+	-o-transform: scale(1.2);
+	-ms-transform: scale(1.2);
 }
 .m-list .name {
 	margin: 0 8px 10px 5px;
@@ -316,7 +430,7 @@
 .m-list .icon {
 	margin-left: 5px; margin-bottom: 10px;
 	width: 40px; height: 18px;
-	background: url('../res/html.png') -196px -41px no-repeat;
+	background: url('../res/sprite.png') -196px -41px no-repeat;
 }
 .m-list .learner {
 	margin-left: 19px; margin-bottom: 10px;
@@ -328,4 +442,6 @@
 	font: bold 12px/12px 'Microsoft Yahei','Arial';
 	color: #ff3f00;
 }
+
+
 
