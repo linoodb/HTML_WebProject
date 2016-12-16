@@ -1,5 +1,16 @@
-//AJAX调用
-function getTrack(callback){
+//JSON 转 JS 对象兼容低版本IE
+function initJSON(){
+    if(!window.JSON){
+        window.JSON = {
+                parse: function(sJSON) {
+                   return eval( "(" + sJSON + ")" );
+              }
+        };
+    };
+}
+
+//AJAX调用，请求服务端数据
+function requestServer(method, url, callback){
 	//创建XHR对象
 	var xhr = null;
 	//兼容IE
@@ -9,26 +20,18 @@ function getTrack(callback){
 	     xhr = new ActiveXObject('Microsoft XMLHTTP');
 	}
 	//监听AJAX事件
-	xhr.addEventListener('readystatechange', function(event){
+    addEvent(xhr, 'readystatechange', function(event){
 		if(xhr.readyState == 4){
-        //200-300为成功，304为读取缓存
-        if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
-            //兼容JSON
-            if (!window.JSON) {
-                    window.JSON = {
-                        parse: function(sJSON){
-                            return eval( "(" + sJSON + ")" );
-                    }
-                };
-            };
-            callback(JSON.parse(xhr.responseText));
-        }else{
-            alert('Request was unsuccessful: ' + xhr.status);
+            //200-300为成功，304为读取缓存
+            if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+                callback(xhr.responseText);
+            }else{
+                alert('Request was unsuccessful: ' + xhr.status);
+            }
         }
-    }
 	});
 	//向服务端发起请求
-	xhr.open('GET', TRACK_URL, true);
+	xhr.open(method, url, true);
 	xhr.send(null);
 }
 
@@ -66,6 +69,18 @@ function getElementsByClassName(node, classNames){
     }
 }
 
+//获取当前样式
+function getStyle(element, att){
+    //特性侦测
+    if(window.getComputedStyle){
+        //优先使用W3C规范
+        return window.getComputedStyle(element)[att];
+    }else{
+        //针对IE9以下兼容
+        return element.currentStyle[att];
+    }
+}
+
 //注册事件
 function addEvent(node, type, handler){
      if (node.addEventListener){
@@ -94,7 +109,7 @@ function hasClass(node, name){
     }
 }
 
-//添加类（支持空格分隔，同时添加多个类）
+//添加类
 function addClass(node, name){
     if(node.classList){
         node.classList.add(name);

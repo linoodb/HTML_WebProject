@@ -318,17 +318,26 @@
 	font: 16px/56px 'Microsoft Yahei','Arial';
 	color: #333;
 }
+.m-top .wrap {
+	display: inline-block;
+	width: 223px; height: 700px;
+	overflow: hidden;
+}
+.m-top .scroll {
+	position: relative; bottom: 0;
+}
 .m-top .item {
-	margin: 20px;
+	margin: 0 20px 20px 20px;
+}
+.m-top .item+.item {
+	margin-top: 20px;
 }
 .m-top .img {
 	float: left;
 	display: inline-block;
 	width: 50px; height: 50px;
-	background: url('../res/demo2.jpg') 0 0 no-repeat;
 }
 .m-top .content {
-	position: relative; top: -2px;
 	margin-left: 62px;
 }
 .m-top .name {
