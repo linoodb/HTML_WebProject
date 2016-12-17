@@ -251,7 +251,7 @@
 /* 主内容区域 */
 .g-main {
 	width: 80%;
-	margin: 0 auto;
+	margin: 0 auto 31px auto;
 }
 /* 侧栏 */
 .m-side {
@@ -382,6 +382,10 @@
 	cursor: pointer;
 }
 /* 课程列表 */
+.m-list {
+	height: 1220px;
+	overflow: hidden;
+}
 .m-list ul {
 	margin-left: -20px;
 	font-size: 0;

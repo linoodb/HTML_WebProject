@@ -35,6 +35,22 @@ function requestServer(method, url, callback){
 	xhr.send(null);
 }
 
+//传入的data一般类似于{name1:value1, name2:value2,...}
+//需要序列化为字符串类似于"name1=value1&name2=value2&..."
+function serialize(data){
+     if(!data) return "";
+     var pairs = [];
+     for(var name in data){
+          if(!data.hasOwnProperty(name)) continue;
+          if(typeof data[name] === "function") continue;
+          var value = data[name].toString();
+          name = encodeURIComponent(name);
+          value = encodeURIComponent(value);
+          pairs.push(name + "=" + value);
+     }
+     return pairs.join("&");
+}
+
 //支持使用空格分隔多个类名
 function getElementsByClassName(node, classNames){
     //特性侦测

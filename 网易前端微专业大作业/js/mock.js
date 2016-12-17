@@ -4,7 +4,9 @@
 *	total = 轮播图片总数
 *	time = 切换时间
 *	animationTime = 动画时间
-* 	data = 轮播图数据
+* 	list = 轮播图数据
+*		url = 跳转链接地址
+*		src = 轮播图片路径
 */
 SLIDE_DATA = '{\
 	"total":3,\
@@ -47,14 +49,14 @@ SLIDE_DATA = '{\
 *		description = 课程描述
 */
 COURSES_DATA = '{\
-	“totalCount” : 80,\
-	“totalPage” : 8,\
-	“pagination” : {\
-		“pageIndex” : 1,\
-		“pageSize” : 10,\
-		“totlePageCount” : \
+	"totalCount" : 80,\
+	"totalPage" : 8,\
+	"pagination" : {\
+		"pageIndex" : 1,\
+		"pageSize" : 10,\
+		"totlePageCount" : 0\
 	},\
-	“list” : [{"id":"967019",\
+	"list" : [{"id":"967019",\
 		"name":"和秋叶一起学职场技能",\
 		"bigPhotoUrl":"http://img1.ph.126.net/eg62.png",\
 		"middlePhotoUrl ":"http://img1.ph.126.net/eg62.png",\

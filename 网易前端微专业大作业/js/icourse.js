@@ -1,10 +1,10 @@
 /*
 *	请求服务端的 URL
 */
-var COURSES_URL = 'http://study.163.com/webDev/couresByCategory.htm'; //课程列表 URL
+var COURSES_URL = 'http://study.163.com/webDev/couresByCategory.htm?'; //课程列表 URL
 var TOP_URL = 'http://study.163.com/webDev/hotcouresByCategory.htm'; //热门排行 URL
 var FOLLOW_URL = 'http://study.163.com/webDev/ attention.htm'; //关注 URL
-var LOGIN_URL = 'http://study.163.com/webDev/login.htm'; //用户登录 URL
+var LOGIN_URL = 'http://study.163.com/webDev/login.htm?'; //用户登录 URL
 var VIDEO_URL = 'http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F5S_shd.mp4'; //视频 URL
 /*
 *	轮播图
@@ -27,6 +27,14 @@ var SCROLL_TIME = 500; //滚动一次的时长
 var scroll = null; //排行榜
 var scrollData = null; //排行榜数据
 var scrollCount = 0; //记录排行榜滚动的次数
+/*
+* 课程列表
+*/
+var courseList = null; //课程列表
+var courseData = null; //课程数据
+var courseParam = {}; //课程请求的参数（跟随在 COURSES_URL 后）
+
+
 
 //初始化 JSON ，兼容 IE 低版本
 initJSON();
@@ -48,11 +56,12 @@ function init(){
 function initUI(){
 	initSlide();
 	inisScroll();
+	initCourse();
 }
 
 //初始化轮播图
 function initSlide(){
-	slideContainer = document.getElementById('slide');
+	slideContainer = document.getElementById('head-slide');
 	slideSelector = getElementsByClassName(slideContainer, 'selector')[0];
 	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
 	slideData = JSON.parse(SLIDE_DATA);
@@ -64,7 +73,7 @@ function initSlide(){
 
 //初始化排行榜
 function inisScroll(){
-	scroll = document.getElementById('scroll');
+	scroll = document.getElementById('top-scroll');
 	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
 	// scrollData = JSON.parse(TOP_DATA);
 
@@ -77,6 +86,27 @@ function inisScroll(){
 		//填充排行榜
 		setScrollItem();
 	});
+}
+
+//初始化课程列表
+function initCourse(){
+	courseList = document.getElementById('coures-list');
+	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
+	// courseData = JSON.parse(COURSES_DATA);
+
+	//处理请求的URL链接
+	courseParam = {
+		pageNo: 1, //当前页码
+		psize: 20, //每页返回数据个数
+		type: 10, //筛选类型（10：产品设计；20：编程语言）
+	}
+	var targetURL = COURSES_URL + serialize(courseParam);
+	//通过 AJAX 请求服务端数据
+	requestServer('GET', targetURL, function(data){
+		console.log(JSON.parse(data));
+	});
+	// console.log(courseData);
+	// console.log(document.body.clientWidth);
 }
 
 //创建轮播图选择器
@@ -115,6 +145,7 @@ function createScrollItem(){
 //设置排行榜列表项
 function setScrollItem(){
 	var li_tag = null; //列表项
+	var a_tag = null; //链接
 	var img_tag = null; //课程图片
 	var name_tag = null; //课程名称
 	var learner_tag = null; //在学人数
@@ -124,6 +155,10 @@ function setScrollItem(){
 		index = (i + scrollCount) % length;
 		//获取列表项
 		li_tag = getElementsByClassName(scroll, 'item')[i];
+		//链接地址（暂时跳转到当前课程大图）
+		a_tag = li_tag.querySelector('a');
+		a_tag.href = scrollData[index].bigPhotoUrl;
+		a_tag.title = scrollData[index].name;
 		//课程图片
 		img_tag = getElementsByClassName(li_tag, 'img')[0];
 		img_tag.style.background = 'url(' + scrollData[index].smallPhotoUrl + ') 0 0 no-repeat';
@@ -281,7 +316,7 @@ function playSlideAnimation(){
 
 //选项卡事件
 function addTabEvent(){
-	var tab = document.getElementById('tab');
+	var tab = document.getElementById('main-tab');
 	designTab = getElementsByClassName(tab, 'design')[0];
 	programTab = getElementsByClassName(tab, 'program')[0];
 	addEvent(tab, 'click', function(event){

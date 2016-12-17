@@ -2,7 +2,7 @@
 *	课程列表模板
 *	对应 m-list 的列表项 li 中的 innerHTML 内容
 */
-M_LIST = '<a href="javascript:void(0);">\
+M_LIST = '<a target="_black">\
 			<div class="img-wrap"><img src="" width="223px" height="124px"></img></div>\
 			<p class="name" title=""></p>\
 			<p class="provider"></p>\
@@ -24,7 +24,7 @@ M_LIST = '<a href="javascript:void(0);">\
 *	热门排行模板
 *	对应 m-top 的 scroll 列表中列表项的 innerHTML 内容
 */
-M_TOP = '<a href="#">\
+M_TOP = '<a target="_black">\
 			<span class="img"></span>\
 			<div class="content"><p class="name"></p><span class="icon"></span><span class="learner"></span></div>\
 		</a>';
