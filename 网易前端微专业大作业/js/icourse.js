@@ -1,4 +1,8 @@
 /*
+*	屏幕宽度
+*/
+var SCREEN_SIZE = 1205; //窗口宽度<1205 时，使用小屏视觉布局；窗口宽度>=1205 时，使用大屏视觉布局
+/*
 *	请求服务端的 URL
 */
 var COURSES_URL = 'http://study.163.com/webDev/couresByCategory.htm?'; //课程列表 URL
@@ -23,19 +27,26 @@ var programTab = null; //编程语言选项卡
 *	滚动排行榜
 */
 var DELAY_TIME = 5000; //排行榜等待滚动的时长
-var SCROLL_TIME = 500; //滚动一次的时长
+var SCROLL_TIME = 500; //滚动一次的时长（可自由设置）
 var scroll = null; //排行榜
 var scrollData = null; //排行榜数据
 var scrollCount = 0; //记录排行榜滚动的次数
 /*
 * 课程列表
 */
+var TOTAL_COURSES = 20; //列表项总数
+var SCREEN_WIDE = 20; //宽屏请求的课程数
+var SCREEN_NARROW = 15; //窄屏请求的课程数
+var COURSE_DESIGN = 10; //产品设计
+var COURSE_PROGRAM = 20; //编程语言
 var courseList = null; //课程列表
 var courseData = null; //课程数据
-var courseParam = {}; //课程请求的参数（跟随在 COURSES_URL 后）
+/*
+*	翻页器
+*/
+var curPage = 1; //当前页数
 
-
-
+//程序开始
 //初始化 JSON ，兼容 IE 低版本
 initJSON();
 init();
@@ -64,7 +75,7 @@ function initSlide(){
 	slideContainer = document.getElementById('head-slide');
 	slideSelector = getElementsByClassName(slideContainer, 'selector')[0];
 	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
-	slideData = JSON.parse(SLIDE_DATA);
+	slideData = JSON.parse(MOCK_SLIDE_DATA);
 	//设置轮播图选项，默认开始选中第一项
 	setSlideItem(0);
 	//创建轮播图选择器
@@ -74,10 +85,11 @@ function initSlide(){
 //初始化排行榜
 function inisScroll(){
 	scroll = document.getElementById('top-scroll');
+	//本地测试使用
 	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
 	// scrollData = JSON.parse(TOP_DATA);
 
-	//通过 AJAX 请求服务端数据
+	//通过 AJAX 请求服务端数据，只需请求一次
 	requestServer('GET', TOP_URL, function(data){
 		//转化为 JS 对象
 		scrollData = JSON.parse(data);
@@ -89,24 +101,36 @@ function inisScroll(){
 }
 
 //初始化课程列表
+
 function initCourse(){
 	courseList = document.getElementById('coures-list');
+	//本地测试使用
 	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
 	// courseData = JSON.parse(COURSES_DATA);
 
-	//处理请求的URL链接
-	courseParam = {
-		pageNo: 1, //当前页码
-		psize: 20, //每页返回数据个数
-		type: 10, //筛选类型（10：产品设计；20：编程语言）
-	}
-	var targetURL = COURSES_URL + serialize(courseParam);
+	//创建课程列表项
+	createCourseItem();
+
+	//默认请求第一页的产品设计，数量根据屏幕宽度来定
+	var param = { pageNo: 1, psize: getNumberOfCourse(), type: COURSE_DESIGN };
+	requestCourse(param);
+}
+
+//向服务器请求课程列表
+//传入的参数 { pageNo: 1, psize: 20, type: 10 }
+//pageNo: 当前页码
+//psize: 每页返回数据个数
+//type: 筛选类型（10：产品设计；20：编程语言）
+function requestCourse(param){
+	//拼接请求的参数
+	var targetURL = COURSES_URL + serialize(param);
 	//通过 AJAX 请求服务端数据
 	requestServer('GET', targetURL, function(data){
-		console.log(JSON.parse(data));
+		//转化为 JS 对象
+		courseData = JSON.parse(data);
+		//填充课程列表项
+		setCourseItem();
 	});
-	// console.log(courseData);
-	// console.log(document.body.clientWidth);
 }
 
 //创建轮播图选择器
@@ -133,7 +157,7 @@ function createScrollItem(){
 	for(var i = 0, length = scrollData.length; i < length; i ++){
 		li_tag = document.createElement('li');
 		//使用模板构建
-		li_tag.innerHTML = M_TOP;
+		li_tag.innerHTML = TEMPLATE_M_TOP;
 		//添加类名
 		addClass(li_tag, 'item');
 		addClass(li_tag, 'clearfix');
@@ -168,6 +192,56 @@ function setScrollItem(){
 		//在学人数
 		learner_tag = getElementsByClassName(li_tag, 'learner')[0];
 		learner_tag.innerHTML = scrollData[index].learnerCount;
+	}
+}
+
+//创建课程列表项
+function createCourseItem(){
+	//列表单项
+	var li_tag = null;
+	//宽屏或窄屏都创建全部列表项，窄屏使用 overflow: hidden 隐藏多余的列表项
+	//后续根据屏幕的宽度和用户点击的页数传递不同参数给服务器，确保所有的课程都会显示给用户观看
+	for(var i = 0; i < TOTAL_COURSES; i ++){
+		li_tag = document.createElement('li');
+		//使用模板构建
+		li_tag.innerHTML = TEMPLATE_M_LIST;
+		//添加到父节点
+		courseList.appendChild(li_tag);
+	}
+}
+
+//设置课程列表项
+function setCourseItem(){
+	var li_tag = null; //列表项
+	var a_tag = null; //链接
+	var img_tag = null; //课程图片
+	var name_tag = null; //课程名称
+	var provider_tag = null; //机构发布者
+	var learner_tag = null; //在学人数
+	var price_tag = null; //课程价格
+	for(var i = 0; i < TOTAL_COURSES; i ++){
+		//获取列表项
+		li_tag = courseList.getElementsByTagName('li')[i];
+		//链接地址（暂时跳转到当前课程大图）
+		a_tag = li_tag.querySelector('a');
+		a_tag.href = courseData.list[i].bigPhotoUrl;
+		a_tag.title = courseData.list[i].name;
+		//课程图片
+		img_tag = li_tag.querySelector('img');
+		img_tag.src = courseData.list[i].middlePhotoUrl;
+		//课程名称
+		name_tag = getElementsByClassName(li_tag, 'name')[0];
+		name_tag.title = courseData.list[i].name;
+		name_tag.innerHTML = courseData.list[i].name;
+		//机构发布者
+		provider_tag = getElementsByClassName(li_tag, 'provider')[0];
+		provider_tag.innerHTML = courseData.list[i].provider;
+		//在学人数
+		learner_tag = getElementsByClassName(li_tag, 'learner')[0];
+		learner_tag.innerHTML = courseData.list[i].learnerCount;
+		//课程价格
+		price_tag = getElementsByClassName(li_tag, 'price')[0];
+		price_tag.innerHTML = (courseData.list[i].price === 0) ? '免费' : '¥&nbsp;' + courseData.list[i].price;
 	}
 }
 
@@ -322,20 +396,23 @@ function addTabEvent(){
 	addEvent(tab, 'click', function(event){
 		event = event || window.event;
 		event.target = event.target || event.srcElement;
-		//先重置所有样式
-		removeClass(designTab, 'selected');
-		removeClass(programTab, 'selected');
-		//再单独设置样式
-		if(hasClass(event.target, 'design')){
-			addClass(designTab, 'selected');
-			//获取课程信息
-
-
-		}else if(hasClass(event.target, 'program')){
-			addClass(programTab, 'selected');
-			//获取课程信息
-
-
+		var curType = null; //当前点击的选项卡对应的服务端参数
+		if(!hasClass(event.target, 'selected')){
+			if(hasClass(event.target, 'design')){
+				removeClass(programTab, 'selected');
+				addClass(designTab, 'selected');
+				curType = COURSE_DESIGN;
+			}else if(hasClass(event.target, 'program')){
+				removeClass(designTab, 'selected');
+				addClass(programTab, 'selected');
+				curType = COURSE_PROGRAM;
+			}
+			//请求服务端数据
+			//根据当前页数决定请求的页数
+			//根据当前屏幕宽度决定请求的课程数量
+			//根据点击的选项卡决定请求的课程类型
+			var param = { pageNo: curPage, psize: getNumberOfCourse(), type: curType };
+			requestCourse(param);
 		}
 	});
 }
@@ -348,7 +425,7 @@ function setScrollAnimation(){
         scrollCount++;
     }, DELAY_TIME);
 
-    //测试使用
+    //本地测试使用
     // clearInterval(foreverID);
 }
 
@@ -372,4 +449,8 @@ function loopScroll(){
 	}, loop);
 }
 
+//根据当前屏幕分辨率，获取课程数
+function getNumberOfCourse(){
+	return (document.body.clientWidth >= SCREEN_SIZE) ? SCREEN_WIDE : SCREEN_NARROW;
+}
 

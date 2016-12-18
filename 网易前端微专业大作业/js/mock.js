@@ -8,7 +8,7 @@
 *		url = 跳转链接地址
 *		src = 轮播图片路径
 */
-SLIDE_DATA = '{\
+MOCK_SLIDE_DATA = '{\
 	"total":3,\
 	"time":5000,\
 	"animationTime":500,\
@@ -48,7 +48,7 @@ SLIDE_DATA = '{\
 *		categoryName = 课程分类
 *		description = 课程描述
 */
-COURSES_DATA = '{\
+MOCK_COURSES_DATA = '{\
 	"totalCount" : 80,\
 	"totalPage" : 8,\
 	"pagination" : {\
@@ -82,7 +82,7 @@ COURSES_DATA = '{\
 *	categoryName = 课程分类
 *	description = 课程描述
 */
-TOP_DATA = '[{\
+MOCK_TOP_DATA = '[{\
 	"id":"967019",\
 	"name":"和秋叶一起学职场技能",\
 	"bigPhotoUrl":"http://img1.ph.126.net/eg62.png",\
