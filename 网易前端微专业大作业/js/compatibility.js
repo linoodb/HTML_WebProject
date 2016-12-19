@@ -1,28 +1,31 @@
+//使用一个对象包裹所有兼容方法，防止命名空间被污染
+var compatibility = {};
+
 //JSON 转 JS 对象兼容低版本IE
-function initJSON(){
+compatibility.initJSON = function(){
     if(!window.JSON){
         window.JSON = {
-                parse: function(sJSON) {
+                parse: function(sJSON){
                    return eval( "(" + sJSON + ")" );
               }
         };
     };
 }
 
-//AJAX调用，请求服务端数据
-function requestServer(method, url, callback){
-	//创建XHR对象
+//AJAX 调用，请求服务端数据
+compatibility.requestServer = function(method, url, callback){
+	//创建 XHR 对象
 	var xhr = null;
-	//兼容IE
+	//兼容 IE
 	if(window.XMLHttpRequest){
 	     xhr = new XMLHttpRequest();
 	}else{
 	     xhr = new ActiveXObject('Microsoft XMLHTTP');
 	}
-	//监听AJAX事件
-    addEvent(xhr, 'readystatechange', function(event){
+	//监听 AJAX 事件
+    compatibility.addEvent(xhr, 'readystatechange', function(event){
 		if(xhr.readyState == 4){
-            //200-300为成功，304为读取缓存
+            //200-300 为成功，304 为读取缓存
             if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
                 callback(xhr.responseText);
             }else{
@@ -35,9 +38,9 @@ function requestServer(method, url, callback){
 	xhr.send(null);
 }
 
-//传入的data一般类似于{name1:value1, name2:value2,...}
-//需要序列化为字符串类似于"name1=value1&name2=value2&..."
-function serialize(data){
+//传入的 data 一般类似于 {name1:value1, name2:value2,...}
+//需要序列化为字符串类似于 "name1=value1&name2=value2&..."
+compatibility.serialize = function(data){
      if(!data) return "";
      var pairs = [];
      for(var name in data){
@@ -52,10 +55,10 @@ function serialize(data){
 }
 
 //支持使用空格分隔多个类名
-function getElementsByClassName(node, classNames){
+compatibility.getElementsByClassName = function(node, classNames){
     //特性侦测
     if(node.getElementsByClassName){
-        //优先使用W3C的规范接口
+        //优先使用 W3C 的规范接口
         return node.getElementsByClassName(classNames);
     }else{
         var elements = node.getElementsByTagName('*'); //获取所有后代节点
@@ -66,11 +69,11 @@ function getElementsByClassName(node, classNames){
 
         //遍历所有的后代节点
         for(var i = 0, element; element = elements[i]; i++){
-            //前后加一个空格字符串，是为了防止当类名为类似user时，如果传入use也会被indexOf找到
+            //前后加一个空格字符串，是为了防止当类名为类似 user 时，如果传入 use 也会被 indexOf 找到
             classNameStr = ' ' + element.className + ' ';
             flag = true;
             for(var j = 0, name; name = names[j]; j++){
-                //没有找到则标记为false
+                //没有找到则标记为 false
                 if(classNameStr.indexOf(' ' + name + ' ') == -1){
                     flag = false;
                     break;
@@ -86,22 +89,32 @@ function getElementsByClassName(node, classNames){
 }
 
 //获取当前样式
-function getStyle(element, att){
+compatibility.getStyle = function(element, att){
     //特性侦测
     if(window.getComputedStyle){
-        //优先使用W3C规范
+        //优先使用 W3C 规范
         return window.getComputedStyle(element)[att];
     }else{
-        //针对IE9以下兼容
+        //针对 IE9 以下兼容
         return element.currentStyle[att];
     }
 }
 
+//阻止默认行为
+compatibility.stopDefault = function(event){
+    if(event.preventDefault){
+        event.preventDefault();
+    }else{
+        //针对 IE8 以下兼容
+        window.event.returnValue = false;
+    }
+}
+
 //注册事件
-function addEvent(node, type, handler){
+compatibility.addEvent = function(node, type, handler){
      if (node.addEventListener){
         node.addEventListener(type, handler, false);
-     }else if(node.attachEvent){ //兼容IE
+     }else if(node.attachEvent){ //兼容 IE
         node.attachEvent('on' + type, handler);
      }else{
         node['on' + type] = handler;
@@ -109,10 +122,10 @@ function addEvent(node, type, handler){
 }
 
 //是否包含类名
-function hasClass(node, name){
+compatibility.hasClass = function(node, name){
     if(node.classList){
         return node.classList.contains(name);
-    }else{ //兼容IE，使用正则匹配类名
+    }else{ //兼容 IE，使用正则匹配类名
         //根据一个或多个空格分割类名
         var classList = node.className.split(/\s+/);
         name = '^' + name + '$'; //增加头尾限制
@@ -126,16 +139,16 @@ function hasClass(node, name){
 }
 
 //添加类
-function addClass(node, name){
+compatibility.addClass = function(node, name){
     if(node.classList){
         node.classList.add(name);
-    }else{ //兼容IE
+    }else{ //兼容 IE
         node.className += ' ' + name;
     }
 }
 
 //删除类（同时删除多个同名类）
-function removeClass(node, name){
+compatibility.removeClass = function(node, name){
     //根据一个或多个空格分割类名
     var classList = node.className.split(/\s+/);
     name = '^' + name + '$'; //增加头尾限制
@@ -148,7 +161,7 @@ function removeClass(node, name){
 }
 
 //替换类（同时修改多个同名类）
-function replaceClass(node, newClass, oldClass){
+compatibility.replaceClass = function(node, newClass, oldClass){
     //根据一个或多个空格分割类名
     var classList = node.className.split(/\s+/);
     oldClass = '^' + oldClass + '$'; //增加头尾限制

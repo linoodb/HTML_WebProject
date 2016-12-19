@@ -11,6 +11,10 @@ var FOLLOW_URL = 'http://study.163.com/webDev/ attention.htm'; //关注 URL
 var LOGIN_URL = 'http://study.163.com/webDev/login.htm?'; //用户登录 URL
 var VIDEO_URL = 'http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F5S_shd.mp4'; //视频 URL
 /*
+*	关注按钮
+*/
+var isFollow = false; //是否关注
+/*
 *	轮播图
 */
 var slideContainer = null; //轮播图容器
@@ -41,6 +45,8 @@ var COURSE_DESIGN = 10; //产品设计
 var COURSE_PROGRAM = 20; //编程语言
 var courseList = null; //课程列表
 var courseData = null; //课程数据
+var floatLayer = null; //课程卡片浮层
+var canScroll = true; //是否可滚动
 /*
 *	翻页器
 */
@@ -48,19 +54,14 @@ var curPage = 1; //当前页数
 
 //程序开始
 //初始化 JSON ，兼容 IE 低版本
-initJSON();
+compatibility.initJSON();
 init();
 
 //初始化
 function init(){
 	initUI();
-	addNotifyEvent();
-	addFollowEvent();
-	addSlideEvent();
-	addTabEvent();
-
-	setSlideAnimation();
-	setScrollAnimation();
+	addEvent();
+	setAnimation();
 }
 
 //初始化界面
@@ -70,10 +71,26 @@ function initUI(){
 	initCourse();
 }
 
+//添加事件
+function addEvent(){
+	addNotifyEvent();
+	addFollowEvent();
+	addSlideEvent();
+	addTabEvent();
+	addFloatEvent();
+	addEquipEvent();
+}
+
+//设置动画
+function setAnimation(){
+	setSlideAnimation();
+	setScrollAnimation();
+}
+
 //初始化轮播图
 function initSlide(){
 	slideContainer = document.getElementById('head-slide');
-	slideSelector = getElementsByClassName(slideContainer, 'selector')[0];
+	slideSelector = compatibility.getElementsByClassName(slideContainer, 'selector')[0];
 	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
 	slideData = JSON.parse(MOCK_SLIDE_DATA);
 	//设置轮播图选项，默认开始选中第一项
@@ -90,7 +107,7 @@ function inisScroll(){
 	// scrollData = JSON.parse(TOP_DATA);
 
 	//通过 AJAX 请求服务端数据，只需请求一次
-	requestServer('GET', TOP_URL, function(data){
+	compatibility.requestServer('GET', TOP_URL, function(data){
 		//转化为 JS 对象
 		scrollData = JSON.parse(data);
 		//创建排行榜列表项
@@ -123,9 +140,9 @@ function initCourse(){
 //type: 筛选类型（10：产品设计；20：编程语言）
 function requestCourse(param){
 	//拼接请求的参数
-	var targetURL = COURSES_URL + serialize(param);
+	var targetURL = COURSES_URL + compatibility.serialize(param);
 	//通过 AJAX 请求服务端数据
-	requestServer('GET', targetURL, function(data){
+	compatibility.requestServer('GET', targetURL, function(data){
 		//转化为 JS 对象
 		courseData = JSON.parse(data);
 		//填充课程列表项
@@ -143,7 +160,7 @@ function createSlideSelector(){
 		i_tag.setAttribute('dataset', i.toString());
 		//默认选中第一个选择器
 		if(i == 0){
-			addClass(i_tag, 'selected');
+			compatibility.addClass(i_tag, 'selected');
 		}
 		slideSelector.appendChild(i_tag);
 	}
@@ -159,8 +176,8 @@ function createScrollItem(){
 		//使用模板构建
 		li_tag.innerHTML = TEMPLATE_M_TOP;
 		//添加类名
-		addClass(li_tag, 'item');
-		addClass(li_tag, 'clearfix');
+		compatibility.addClass(li_tag, 'item');
+		compatibility.addClass(li_tag, 'clearfix');
 		//添加到父节点
 		scroll.appendChild(li_tag);
 	}
@@ -178,19 +195,19 @@ function setScrollItem(){
 		//通过取余来确定索引的位置
 		index = (i + scrollCount) % length;
 		//获取列表项
-		li_tag = getElementsByClassName(scroll, 'item')[i];
+		li_tag = compatibility.getElementsByClassName(scroll, 'item')[i];
 		//链接地址（暂时跳转到当前课程大图）
 		a_tag = li_tag.querySelector('a');
 		a_tag.href = scrollData[index].bigPhotoUrl;
 		a_tag.title = scrollData[index].name;
 		//课程图片
-		img_tag = getElementsByClassName(li_tag, 'img')[0];
+		img_tag = compatibility.getElementsByClassName(li_tag, 'img')[0];
 		img_tag.style.background = 'url(' + scrollData[index].smallPhotoUrl + ') 0 0 no-repeat';
 		//课程名称
-		name_tag = getElementsByClassName(li_tag, 'name')[0];
+		name_tag = compatibility.getElementsByClassName(li_tag, 'name')[0];
 		name_tag.innerHTML = scrollData[index].name;
 		//在学人数
-		learner_tag = getElementsByClassName(li_tag, 'learner')[0];
+		learner_tag = compatibility.getElementsByClassName(li_tag, 'learner')[0];
 		learner_tag.innerHTML = scrollData[index].learnerCount;
 	}
 }
@@ -228,19 +245,21 @@ function setCourseItem(){
 		a_tag.title = courseData.list[i].name;
 		//课程图片
 		img_tag = li_tag.querySelector('img');
+		//保存节点索引用于后续浮层使用
+		img_tag.setAttribute('dataset', i.toString());
 		img_tag.src = courseData.list[i].middlePhotoUrl;
 		//课程名称
-		name_tag = getElementsByClassName(li_tag, 'name')[0];
+		name_tag = compatibility.getElementsByClassName(li_tag, 'name')[0];
 		name_tag.title = courseData.list[i].name;
 		name_tag.innerHTML = courseData.list[i].name;
 		//机构发布者
-		provider_tag = getElementsByClassName(li_tag, 'provider')[0];
+		provider_tag = compatibility.getElementsByClassName(li_tag, 'provider')[0];
 		provider_tag.innerHTML = courseData.list[i].provider;
 		//在学人数
-		learner_tag = getElementsByClassName(li_tag, 'learner')[0];
+		learner_tag = compatibility.getElementsByClassName(li_tag, 'learner')[0];
 		learner_tag.innerHTML = courseData.list[i].learnerCount;
 		//课程价格
-		price_tag = getElementsByClassName(li_tag, 'price')[0];
+		price_tag = compatibility.getElementsByClassName(li_tag, 'price')[0];
 		price_tag.innerHTML = (courseData.list[i].price === 0) ? '免费' : '¥&nbsp;' + courseData.list[i].price;
 	}
 }
@@ -248,13 +267,13 @@ function setCourseItem(){
 // 顶部通知栏事件
 function addNotifyEvent(){
 	var btnNotify = document.getElementById('btn-notify');
-	var btnClose = getElementsByClassName(btnNotify, 'close')[0];
-	var btnCloseFv = getElementsByClassName(btnNotify, 'close-fv')[0];
-	addEvent(btnClose, 'click', function(event){
-		addClass(btnNotify, 'z-hidden');
+	var btnClose = compatibility.getElementsByClassName(btnNotify, 'close')[0];
+	var btnCloseFv = compatibility.getElementsByClassName(btnNotify, 'close-fv')[0];
+	compatibility.addEvent(btnClose, 'click', function(event){
+		compatibility.addClass(btnNotify, 'z-hidden');
 	});
-	addEvent(btnCloseFv, 'click', function(event){
-		addClass(btnNotify, 'z-hidden');
+	compatibility.addEvent(btnCloseFv, 'click', function(event){
+		compatibility.addClass(btnNotify, 'z-hidden');
 		//处理 Cookies ，以后登录同一账号不会再出现
 	});
 }
@@ -262,14 +281,13 @@ function addNotifyEvent(){
 //关注按钮事件
 function addFollowEvent(){
 	var btnFollow = document.getElementById('btn-follow');
-	replaceClass.isFollow = false;
-	addEvent(btnFollow, 'click', function(event){
+	compatibility.addEvent(btnFollow, 'click', function(event){
 		//先要判断 Cookies ，如果没有登录则弹出登录框
-		replaceClass.isFollow = !replaceClass.isFollow;
-		if(replaceClass.isFollow){
-			replaceClass(btnFollow, 'follow', 'un-follow');
+		isFollow = !isFollow;
+		if(isFollow){
+			compatibility.replaceClass(btnFollow, 'follow', 'un-follow');
 		}else{
-			replaceClass(btnFollow, 'un-follow', 'follow');
+			compatibility.replaceClass(btnFollow, 'un-follow', 'follow');
 		}
 	});
 }
@@ -278,21 +296,21 @@ function addFollowEvent(){
 function addSlideEvent(){
 	var img_tag = slideContainer.querySelector('img');
 	//移入轮播图事件
-	addEvent(img_tag, 'mouseenter', function(event){
+	compatibility.addEvent(img_tag, 'mouseenter', function(event){
 		isSlideMove = false;
 	});
 	//移出轮播图事件
-	addEvent(img_tag, 'mouseleave', function(event){
+	compatibility.addEvent(img_tag, 'mouseleave', function(event){
 		isSlideMove = true;
 	});
 
 	//点击选择器事件
-	addEvent(slideSelector, 'click', function(event){
+	compatibility.addEvent(slideSelector, 'click', function(event){
 		event = event || window.event;
 		event.target = event.target || event.srcElement;
 
 		//是否点击在选择器上（有可能点击到ul上造成无法获得索引值）
-		if(!hasClass(event.target, 'selector')){
+		if(!compatibility.hasClass(event.target, 'selector')){
 			//获取点击选择器的索引
 			var clickSlide = parseInt(event.target.getAttribute('dataset'));
 			//如果点击在当前播放的索引项，则无效
@@ -338,15 +356,15 @@ function goToSlide(index){
 function setSelector(){
 	//先重置所有选择器
 	for(var i = 0; i < slideData.total; i ++){
-		removeClass(slideSelector.children[i], 'selected');
+		compatibility.removeClass(slideSelector.getElementsByTagName('i')[i], 'selected');
 	}
 	//再设置当前选中的选择器
-	addClass(slideSelector.children[curSlide], 'selected');
+	compatibility.addClass(slideSelector.getElementsByTagName('i')[curSlide], 'selected');
 }
 
 //设置轮播图选项
 function setSlideItem(index){
-	var slide = getElementsByClassName(slideContainer, 'slide')[0];
+	var slide = compatibility.getElementsByClassName(slideContainer, 'slide')[0];
 	//设置链接
 	var a_tag = slide.querySelector('a');
 	a_tag.setAttribute('href', slideData.list[index].url);
@@ -391,20 +409,20 @@ function playSlideAnimation(){
 //选项卡事件
 function addTabEvent(){
 	var tab = document.getElementById('main-tab');
-	designTab = getElementsByClassName(tab, 'design')[0];
-	programTab = getElementsByClassName(tab, 'program')[0];
-	addEvent(tab, 'click', function(event){
+	designTab = compatibility.getElementsByClassName(tab, 'design')[0];
+	programTab = compatibility.getElementsByClassName(tab, 'program')[0];
+	compatibility.addEvent(tab, 'click', function(event){
 		event = event || window.event;
 		event.target = event.target || event.srcElement;
 		var curType = null; //当前点击的选项卡对应的服务端参数
-		if(!hasClass(event.target, 'selected')){
-			if(hasClass(event.target, 'design')){
-				removeClass(programTab, 'selected');
-				addClass(designTab, 'selected');
+		if(!compatibility.hasClass(event.target, 'selected')){
+			if(compatibility.hasClass(event.target, 'design')){
+				compatibility.removeClass(programTab, 'selected');
+				compatibility.addClass(designTab, 'selected');
 				curType = COURSE_DESIGN;
-			}else if(hasClass(event.target, 'program')){
-				removeClass(designTab, 'selected');
-				addClass(programTab, 'selected');
+			}else if(compatibility.hasClass(event.target, 'program')){
+				compatibility.removeClass(designTab, 'selected');
+				compatibility.addClass(programTab, 'selected');
 				curType = COURSE_PROGRAM;
 			}
 			//请求服务端数据
@@ -436,7 +454,7 @@ function loopScroll(){
 	var totalDis = 70; //总共要滚动的距离
 	var onceDis = ( totalDis * loop ) / SCROLL_TIME; //通过比例获得每次需要增加的距离
 	var onceID = setInterval(function(){
-		curDis = parseInt(getStyle(scroll, 'bottom'));
+		curDis = parseInt(compatibility.getStyle(scroll, 'bottom'));
 		scroll.style.bottom = (curDis + onceDis) + 'px';
 		if(curDis >= totalDis){
 			//修正坐标
@@ -447,6 +465,75 @@ function loopScroll(){
             clearInterval(onceID);
 		}
 	}, loop);
+}
+
+//浮层事件
+function addFloatEvent(){
+	floatLayer = document.getElementById('float-layer');
+
+	//鼠标移出事件
+	compatibility.addEvent(floatLayer, 'mouseleave', function(event){
+		//鼠标移出隐藏浮层
+		compatibility.replaceClass(floatLayer, 'z-hidden', 'z-show-blk');
+		//移除浮层后开启滚动
+		canScroll = true;
+	});
+
+	var wrap = null; //图片容器
+	var rect = null; //图片容器相对屏幕的位置
+	//鼠标移入事件
+	compatibility.addEvent(courseList, 'mouseover', function(event){
+		event = event || window.event;
+		event.target = event.target || event.srcElement;
+		//移入图片显示浮层
+		if(compatibility.hasClass(event.target, 'img')){
+			//设置图层内容
+			setFloatLayer(event.target.getAttribute('dataset'));
+			//以图片的父节点 img-wrap 来确定位置
+			rect = event.target.parentNode.getBoundingClientRect();
+			//设置浮层坐标
+			floatLayer.style.top = rect.top - 11 + 'px';
+			floatLayer.style.left = rect.left - 11 + 'px';
+			//显示浮层
+			compatibility.replaceClass(floatLayer, 'z-show-blk', 'z-hidden');
+			//因为浮层使用 position: fixed 来定位，如果移入浮层后滚动会导致浮层错位，所以关闭了滚动
+			canScroll = false;
+		}
+	});
+}
+
+//设置图层内容
+function setFloatLayer(index){
+	//课程图片
+	var img_tag = compatibility.getElementsByClassName(floatLayer, 'img')[0];
+	img_tag.src = courseData.list[index].middlePhotoUrl;
+}
+
+//鼠标键盘设备事件
+function addEquipEvent(){
+	//鼠标中键事件
+	compatibility.addEvent(document, 'mousewheel', function(event){
+		event = event || window.event;
+		event.target = event.target || event.srcElement;
+		//阻止鼠标中键滚动
+		if(!canScroll) compatibility.stopDefault(event);
+	});
+	//鼠标中键事件，兼容 FireFox
+	compatibility.addEvent(document, 'wheel', function(event){
+		event = event || window.event;
+		event.target = event.target || event.srcElement;
+		//阻止鼠标中键滚动
+		if(!canScroll) compatibility.stopDefault(event);
+	});
+
+	//键盘按下事件
+	compatibility.addEvent(document, 'keydown', function(event){
+		event = event || window.event;
+		//阻止键盘上下滚动
+		if(event.keyCode === 38 || event.keyCode === 40){
+			if(!canScroll) compatibility.stopDefault(event);
+		}
+	})
 }
 
 //根据当前屏幕分辨率，获取课程数

@@ -27,12 +27,12 @@
 	background: url('../res/sprite.png') -110px -2px no-repeat;
 }
 
-/* 轮播图选择器 */
+/* 轮播图选择器（选中状态） */
 .m-sld .selected {
-	background: url('../res/sprite.png') -240px -2px no-repeat;
+	background: url('../res/sprite.png') -240px -14px no-repeat;
 }
 
-/* 选项卡 */
+/* 选项卡（选中状态） */
 .m-tab .selected {
 	background-color: #39a030;
 	color: #fff;

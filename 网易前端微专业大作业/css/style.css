@@ -131,7 +131,7 @@
 	cursor: pointer;
 }
 .m-nav .btn-search:hover {
-	background: url('../res/sprite.png') -84px -48px no-repeat;
+	background: url('../res/sprite.png') -196px -25px no-repeat;
 }
 /* 轮播图 */
 /* sld = slide */
@@ -155,7 +155,7 @@
 .m-sld i {
 	display: inline-block;
 	width: 10px; height: 10px;
-	background: url('../res/sprite.png') -240px -14px no-repeat;
+	background: url('../res/sprite.png') -240px -2px no-repeat;
 	cursor: pointer;
 }
 .m-sld i+i {
@@ -178,7 +178,7 @@
 	width: 80px; height: 80px;
 }
 .m-stn .icon-1 {
-	background: url('../res/sprite.png') -84px -107px no-repeat;
+	background: url('../res/sprite.png') -2px -145px no-repeat;
 }
 .m-stn .icon-2 {
 	background: url('../res/sprite.png') -114px -25px no-repeat;
@@ -260,7 +260,6 @@
 /* 机构介绍视频 */
 /* vdo = video */
 .m-vdo {
-	position: relative;
 	width: 223px;
 	margin-bottom: 21px;
 	background-color: #fff;
@@ -295,10 +294,10 @@
 	display: inline-block;
 	position: relative; top: 32px;
 	width: 46px; height: 46px;
-	background: url('../res/sprite.png') -196px -61px no-repeat;
+	background: url('../res/sprite.png') -196px -49px no-repeat;
 }
 .m-vdo .img:hover .play{
-	background: url('../res/sprite.png') -2px -189px no-repeat;
+	background: url('../res/sprite.png') -196px -97px no-repeat;
 }
 /* 课程排行榜 */
 .m-top {
@@ -383,7 +382,7 @@
 }
 /* 课程列表 */
 .m-list {
-	height: 1220px;
+	height: 1230px;
 	overflow: hidden;
 }
 .m-list ul {
@@ -410,14 +409,14 @@
 	margin: 1px 1px 10px 1px;
 	overflow: hidden;
 }
-.m-list img {
+.m-list .img {
 	transition: all 1s;
 	-webkit-transition: all 1s;
 	-moz-transition: all 1s;
 	-o-transition: all 1s;
 	-ms-transition: all 1s;
 }
-.m-list li:hover img {
+.m-list li:hover .img {
 	transform: scale(1.2);
 	-webkit-transform: scale(1.2);
 	-moz-transform: scale(1.2);
@@ -440,20 +439,42 @@
 	font: 12px/12px 'Microsoft Yahei';
 	color: #999;
 }
-.m-list .icon {
+.m-list .icon-wrap {
+	display: inline-block;
 	margin-left: 5px; margin-bottom: 10px;
-	width: 40px; height: 18px;
-	background: url('../res/sprite.png') -196px -41px no-repeat;
+	border: 1px solid #ddd;
+	border-radius: 2px;
+}
+.m-list .icon {
+	display: inline-block;
+	margin-left: 3px; margin-top: 3px;
+	width: 9px; height: 10px;
+	background: url('../res/sprite.png') -239px -26px no-repeat;
 }
 .m-list .learner {
-	margin-left: 19px; margin-bottom: 10px;
-	font: 11px/18px 'Microsoft Yahei';
+	display: inline-block;
+	margin: 0 3px 3px 5px;
+	font: 11px/10px 'Microsoft Yahei';
 	color: #999;
 }
 .m-list .price {
 	margin-left: 6px;
 	font: bold 12px/12px 'Microsoft Yahei';
 	color: #ff3f00;
+}
+/* 课程卡片浮层 */
+.m-ft {
+	position: fixed; left: 0; top: 0;
+	width: 479px; height: 238px;
+	background-color: #fff;
+	box-shadow: 0 -1px 2px 0 #d0cfd0, 1px 0 2px 0 #d1d0d0, 0 1px 2px 0 #c1c0c0, -1px 0 3px 0 #d4d3d3;
+}
+.m-ft .img {
+	display: inline-block;
+	margin-left: 11px; margin-top: 11px;
+}
+.m-ft .title-wrap {
+	display: inline-block;
 }
 
 
