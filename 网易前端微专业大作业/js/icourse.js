@@ -39,8 +39,6 @@ var scrollCount = 0; //记录排行榜滚动的次数
 * 课程列表
 */
 var TOTAL_COURSES = 20; //列表项总数
-var SCREEN_WIDE = 20; //宽屏请求的课程数
-var SCREEN_NARROW = 15; //窄屏请求的课程数
 var COURSE_DESIGN = 10; //产品设计
 var COURSE_PROGRAM = 20; //编程语言
 var courseList = null; //课程列表
@@ -129,7 +127,7 @@ function initCourse(){
 	createCourseItem();
 
 	//默认请求第一页的产品设计，数量根据屏幕宽度来定
-	var param = { pageNo: 1, psize: getNumberOfCourse(), type: COURSE_DESIGN };
+	var param = { pageNo: 1, psize: TOTAL_COURSES, type: COURSE_DESIGN };
 	requestCourse(param);
 }
 
@@ -239,7 +237,7 @@ function setCourseItem(){
 	for(var i = 0; i < TOTAL_COURSES; i ++){
 		//获取列表项
 		li_tag = courseList.getElementsByTagName('li')[i];
-		//链接地址（暂时跳转到当前课程大图）
+		//链接地址（暂时跳转到当前课程中图）
 		a_tag = li_tag.querySelector('a');
 		a_tag.href = courseData.list[i].bigPhotoUrl;
 		a_tag.title = courseData.list[i].name;
@@ -429,7 +427,7 @@ function addTabEvent(){
 			//根据当前页数决定请求的页数
 			//根据当前屏幕宽度决定请求的课程数量
 			//根据点击的选项卡决定请求的课程类型
-			var param = { pageNo: curPage, psize: getNumberOfCourse(), type: curType };
+			var param = { pageNo: curPage, psize: TOTAL_COURSES, type: curType };
 			requestCourse(param);
 		}
 	});
@@ -507,6 +505,27 @@ function setFloatLayer(index){
 	//课程图片
 	var img_tag = compatibility.getElementsByClassName(floatLayer, 'img')[0];
 	img_tag.src = courseData.list[index].middlePhotoUrl;
+	//课程名称
+	var name_tag = compatibility.getElementsByClassName(floatLayer, 'name')[0];
+	name_tag.title = courseData.list[index].name;
+	name_tag.innerHTML = courseData.list[index].name;
+	//在学人数
+	var learner_tag = compatibility.getElementsByClassName(floatLayer, 'learner')[0];
+	learner_tag.innerHTML = courseData.list[index].learnerCount + '人在学';
+	//机构发布者
+	var provider_tag = compatibility.getElementsByClassName(floatLayer, 'provider')[0];
+	provider_tag.innerHTML = '发布者：' + courseData.list[index].provider;
+	//分类（服务端categoryName返回null？？？，可能会暂时使用targetUser）
+	var category_tag = compatibility.getElementsByClassName(floatLayer, 'category')[0];
+	if(courseData.list[index].categoryName === null){
+		category_tag.innerHTML = '分类：无';
+	}else{
+		category_tag.innerHTML = '分类：' + courseData.list[index].categoryName;
+	}
+	// category_tag.innerHTML = '分类：' + courseData.list[index].targetUser;
+	//描述
+	var des_tag = compatibility.getElementsByClassName(floatLayer, 'description')[0];
+	des_tag.innerHTML = courseData.list[index].description;
 }
 
 //鼠标键盘设备事件
@@ -534,10 +553,5 @@ function addEquipEvent(){
 			if(!canScroll) compatibility.stopDefault(event);
 		}
 	})
-}
-
-//根据当前屏幕分辨率，获取课程数
-function getNumberOfCourse(){
-	return (document.body.clientWidth >= SCREEN_SIZE) ? SCREEN_WIDE : SCREEN_NARROW;
 }
 

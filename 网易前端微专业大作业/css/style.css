@@ -465,16 +465,57 @@
 /* 课程卡片浮层 */
 .m-ft {
 	position: fixed; left: 0; top: 0;
-	width: 479px; height: 238px;
 	background-color: #fff;
 	box-shadow: 0 -1px 2px 0 #d0cfd0, 1px 0 2px 0 #d1d0d0, 0 1px 2px 0 #c1c0c0, -1px 0 3px 0 #d4d3d3;
 }
-.m-ft .img {
-	display: inline-block;
-	margin-left: 11px; margin-top: 11px;
+.m-ft .title {
+	margin-bottom: 20px;
 }
-.m-ft .title-wrap {
+.m-ft .img {
+	float: left;
+	margin: 11px 20px 0 11px;
+}
+.m-ft .wrap {
+	padding-top: 15px;
+}
+.m-ft .name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+  	white-space: nowrap;
+	font: 18px/18px 'Microsoft Yahei';
+	color: #333;
+}
+.m-ft .icon {
 	display: inline-block;
+	margin-top: 18px;
+	width: 9px; height: 10px;
+	background: url('../res/sprite.png') -239px -26px no-repeat;
+}
+.m-ft .learner {
+	margin-left: 6px;
+	font: 12px/12px 'Microsoft Yahei';
+	color: #666;
+}
+.m-ft .provider {
+	margin-top: 13px;
+	font: 12px/12px 'Microsoft Yahei';
+	color: #666;
+}
+.m-ft .category {
+	margin-top: 8px;
+	font: 12px/12px 'Microsoft Yahei';
+	color: #666;
+}
+.m-ft .content {
+	display: table-cell;
+	width: 479px; height: 83px;
+	background-color: #f8f8f8;
+	vertical-align: middle;
+}
+.m-ft .description {
+	padding: 20px 33px 20px 20px;
+	font: 14px/24px 'Microsoft Yahei';
+	color: #666;
 }
 
 
