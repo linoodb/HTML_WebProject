@@ -30,6 +30,7 @@ var programTab = null; //编程语言选项卡
 /*
 *	滚动排行榜
 */
+var TOTAL_SCROLL = 11; //排行榜列表项的数量
 var DELAY_TIME = 5000; //排行榜等待滚动的时长
 var SCROLL_TIME = 500; //滚动一次的时长（可自由设置）
 var scroll = null; //排行榜
@@ -128,7 +129,7 @@ function initCourse(){
 
 	//默认请求第一页的产品设计，数量根据屏幕宽度来定
 	var param = { pageNo: 1, psize: TOTAL_COURSES, type: COURSE_DESIGN };
-	requestCourse(param);
+	changeCourse(param);
 }
 
 //向服务器请求课程列表
@@ -136,7 +137,7 @@ function initCourse(){
 //pageNo: 当前页码
 //psize: 每页返回数据个数
 //type: 筛选类型（10：产品设计；20：编程语言）
-function requestCourse(param){
+function changeCourse(param){
 	//拼接请求的参数
 	var targetURL = COURSES_URL + compatibility.serialize(param);
 	//通过 AJAX 请求服务端数据
@@ -168,8 +169,8 @@ function createSlideSelector(){
 function createScrollItem(){
 	//列表单项
 	var li_tag = null;
-	//根据返回的数据长度生成排行榜
-	for(var i = 0, length = scrollData.length; i < length; i ++){
+	//排行榜显示的图片为10，创建11个列表项就足够了，后续根据取余来更新数据
+	for(var i = 0; i < TOTAL_SCROLL; i ++){
 		li_tag = document.createElement('li');
 		//使用模板构建
 		li_tag.innerHTML = TEMPLATE_M_TOP;
@@ -189,7 +190,8 @@ function setScrollItem(){
 	var name_tag = null; //课程名称
 	var learner_tag = null; //在学人数
 	var index = null; //索引
-	for(var i = 0, length = scrollData.length; i < length; i ++){
+	var length = scrollData.length; //数据总长度
+	for(var i = 0; i < TOTAL_SCROLL; i ++){
 		//通过取余来确定索引的位置
 		index = (i + scrollCount) % length;
 		//获取列表项
@@ -372,6 +374,7 @@ function setSlideItem(index){
 }
 
 //切换动画
+//设置 img 的透明度为 0 然后淡入，并通过改变 img 和 a 标签的链接地址来模拟轮播图
 function playSlideAnimation(){
 	var opacity = 0; //透明度
     var loop = 100; //计时器间隔（毫秒），时间越短运行次数越多（可设置），不会影响到总时长
@@ -428,12 +431,13 @@ function addTabEvent(){
 			//根据当前屏幕宽度决定请求的课程数量
 			//根据点击的选项卡决定请求的课程类型
 			var param = { pageNo: curPage, psize: TOTAL_COURSES, type: curType };
-			requestCourse(param);
+			changeCourse(param);
 		}
 	});
 }
 
 //热门排行榜动画
+//每次移动一个列表项高度然后重置列表到移动前的位置，再根据记录的滚动数来刷新数据，模拟滚动列表的效果
 function setScrollAnimation(){
 	//永久滚动
     var foreverID = setInterval(function(){
@@ -529,6 +533,7 @@ function setFloatLayer(index){
 }
 
 //鼠标键盘设备事件
+//为了防止浮层移动位置而设置的，具体操作起来用户体验很不好。。等后续修改
 function addEquipEvent(){
 	//鼠标中键事件
 	compatibility.addEvent(document, 'mousewheel', function(event){

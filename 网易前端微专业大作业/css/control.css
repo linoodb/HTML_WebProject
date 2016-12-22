@@ -37,3 +37,8 @@
 	background-color: #39a030;
 	color: #fff;
 }
+
+/* 翻页器（选中状态） */
+.m-page .selected {
+	color: #39a030;
+}
