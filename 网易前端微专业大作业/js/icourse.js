@@ -7,7 +7,7 @@ var SCREEN_SIZE = 1205; //窗口宽度<1205 时，使用小屏视觉布局；窗
 */
 var COURSES_URL = 'http://study.163.com/webDev/couresByCategory.htm?'; //课程列表 URL
 var TOP_URL = 'http://study.163.com/webDev/hotcouresByCategory.htm'; //热门排行 URL
-var FOLLOW_URL = 'http://study.163.com/webDev/ attention.htm'; //关注 URL
+var FOLLOW_URL = 'http://study.163.com/webDev/attention.htm'; //关注 URL
 var LOGIN_URL = 'http://study.163.com/webDev/login.htm?'; //用户登录 URL
 var VIDEO_URL = 'http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F5S_shd.mp4'; //视频 URL
 /*
@@ -50,6 +50,10 @@ var canScroll = true; //是否可滚动
 *	翻页器
 */
 var curPage = 1; //当前页数
+/*
+*	登录框
+*/
+var loginClose = null; //关闭登录层按钮
 
 //程序开始
 //初始化 JSON ，兼容 IE 低版本
@@ -77,6 +81,7 @@ function addEvent(){
 	addSlideEvent();
 	addTabEvent();
 	addFloatEvent();
+	addVideoEvent();
 	addEquipEvent();
 }
 
@@ -266,7 +271,7 @@ function setCourseItem(){
 
 // 顶部通知栏事件
 function addNotifyEvent(){
-	var btnNotify = document.getElementById('btn-notify');
+	var btnNotify = document.getElementById('head-notify');
 	var btnClose = compatibility.getElementsByClassName(btnNotify, 'close')[0];
 	var btnCloseFv = compatibility.getElementsByClassName(btnNotify, 'close-fv')[0];
 	compatibility.addEvent(btnClose, 'click', function(event){
@@ -521,15 +526,32 @@ function setFloatLayer(index){
 	provider_tag.innerHTML = '发布者：' + courseData.list[index].provider;
 	//分类（服务端categoryName返回null？？？，可能会暂时使用targetUser）
 	var category_tag = compatibility.getElementsByClassName(floatLayer, 'category')[0];
-	if(courseData.list[index].categoryName === null){
-		category_tag.innerHTML = '分类：无';
-	}else{
-		category_tag.innerHTML = '分类：' + courseData.list[index].categoryName;
-	}
 	// category_tag.innerHTML = '分类：' + courseData.list[index].targetUser;
+	category_tag.innerHTML = courseData.list[index].categoryName ? ('分类：' + courseData.list[index].categoryName) : '分类：无';
 	//描述
 	var des_tag = compatibility.getElementsByClassName(floatLayer, 'description')[0];
 	des_tag.innerHTML = courseData.list[index].description;
+}
+
+//视频事件
+function addVideoEvent(){
+	//视频层
+	var videoLayer = document.getElementById('popup-video');
+	console.log(videoLayer)
+	//视频
+	var video = videoLayer.querySelector('video');
+	//播放视频按钮
+	var playBtn = document.getElementById('btn-play-video');
+	compatibility.addEvent(playBtn, 'click', function(event){
+		console.log(123);
+		compatibility.removeClass(videoLayer, 'm-vd');
+	});
+	//关闭视频层按钮
+	var closeBtn = document.getElementById('btn-close-video');
+	compatibility.addEvent(closeBtn, 'click', function(event){
+		console.log(456);
+		compatibility.addClass(videoLayer, 'z-hidden');
+	});
 }
 
 //鼠标键盘设备事件

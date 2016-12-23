@@ -17,9 +17,9 @@
 	<!-- 最外围包裹层，控制整个网页的居中 -->
 	<div class="x-wrap">
 		<!-- 顶部通知条 -->
-		<div id="btn-notify" class="m-ntf">
+		<div id="head-notify" class="m-ntf">
 			<p>网易云课堂微专业，帮助你掌握专业技能，令你求职或加薪多一份独特优势！<a href="#">立即查看&gt;</a></p>
-			<div><span class="close"></span><span class="close-fv">不再提示</span></div>
+			<div><span id="btn-close-notify" class="close"></span><span id="btn-close-notify-fv" class="close-fv">不再提示</span></div>
 		</div>
 		<!-- /顶部通知条 -->
 
@@ -107,10 +107,10 @@
 				<!-- 侧栏 -->
 				<div class="m-side">
 					<!-- 机构介绍视频 -->
-					<div class="m-vdo">
+					<div class="m-itd">
 						<h2>机构介绍</h2>
 						<p>观看下面的视频来了解吧：</p>
-						<div class="img"><span class="play"></span></div>
+						<div id="btn-play-video" class="img"><span class="play"></span></div>
 					</div>
 					<!-- /机构介绍视频 -->
 					<!-- 课程排行榜 -->
@@ -169,7 +169,7 @@
 			<!-- 网页信息 -->
 			<div class="m-info">
 				<div class="wrap">
-					<div class="title-wrap">
+					<div class="tt-wrap">
 						<span class="logo">EDU</span>
 						<span class="sep">|</span>
 						<span class="title">网易教育产品部</span>
@@ -179,22 +179,22 @@
 						<p>icourses.cn&nbsp;京ICP备12020869号-2&nbsp;京公网安备110102000459-2</p>
 					</div>
 				</div>
-				<dl>
+				<dl class="link">
 					<dt>友情链接：</dt>
-					<dd><a href="">网易公开课</a></dd>
-					<dd><a href="">网易云课堂</a></dd>
-					<dd><a href="">中国大学MOOC</a></dd>
+					<dd><a href="http://open.163.com/" target="_blank">网易公开课</a></dd>
+					<dd><a href="http://study.163.com/" target="_blank">网易云课堂</a></dd>
+					<dd><a href="http://www.icourse163.org/" target="_blank">中国大学MOOC</a></dd>
 				</dl>
-				<dl>
+				<dl class="our">
 					<dt>我们：</dt>
-					<dd><a href="">关于</a></dd>
-					<dd><a href="">练习</a></dd>
-					<dd><a href="">关注</a><span class="icon"></span></dd>
+					<dd><a href="javascript:void(0);">关于</a></dd>
+					<dd><a href="javascript:void(0);">练习</a></dd>
+					<dd><a href="javascript:void(0);">关注</a><span class="icon"></span></dd>
 				</dl>
-				<dl>
+				<dl class="more">
 					<dt>更多：</dt>
-					<dd><a href="">常见问题</a></dd>
-					<dd><a href="">意见反馈</a></dd>
+					<dd><a href="javascript:void(0);">常见问题</a></dd>
+					<dd><a href="javascript:void(0);">意见反馈</a></dd>
 				</dl>
 			</div>
 			<!-- /网页信息 -->
@@ -202,6 +202,32 @@
 		<!-- /网页脚部 -->
 	</div>
 	<!-- /最外围包裹层 -->
+
+	<!-- 登录层 -->
+	<div id="popup-login" class="m-login z-hidden">
+		<div class="wrap">
+			<div class="bg">
+				<h2>登录网易云课堂</h2>
+				<span id="btn-close-login" class="close"></span>
+			</div>
+		<div>
+	</div>
+	<!-- /登录层 -->
+
+	<!-- 视频层 -->
+	<div id="popup-video" class="m-vd z-hidden">
+		<div class="wrap">
+			<div class="bg">
+				<h2>请观看下面的视频</h2>
+				<span id="btn-close-video" class="close"></span>
+				<video width="889px" height="567px" controls><!-- autoplay -->
+					<source src="http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F5S_shd.mp4" type="video/mp4">
+					您的浏览器不支持 video 标签
+				</video>
+			</div>
+		</div>
+	</div>
+	<!-- /视频层 -->
 
 	<!-- 引入JavaScript -->
 	<script type="text/javascript" src="js/compatibility.js"></script>
