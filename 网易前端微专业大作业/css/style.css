@@ -614,42 +614,74 @@
 	background: url('../res/sprite.png') -618px -50px no-repeat;
 }
 /* 登录层 */
-
-/* 视频层 */
+/* log = login */
 /* vd = video */
-.m-vd {
+.m-log, .m-vd {
 	display: table;
 	width: 100%; height: 100%;
 	position: fixed;
 	left: 0; top: 0;
-	background-color: #000;
 	/*background-color: rgba(0, 0, 0, 0.8);*/
 	background: url('../res/popup-bg.png');
 }
-.m-vd>.wrap {
+.m-log>.wrap, .m-vd>.wrap {
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
 }
-.m-vd .bg {
+.m-log .bg, .m-vd .bg {
 	position: relative;
 	display: inline-block;
-	width: 950px; height: 676px;
 	background-color: #fff;
 }
-.m-vd h2 {
-	margin-left: 30px; margin-top: 29px;
+.m-vd h2, .m-log h2 {
 	text-align: left;
-	font: 18px/18px 'Microsoft Yahei';
+	font: bold 18px/18px 'Microsoft Yahei';
 	color: #444;
 }
-.m-vd .close {
+.m-vd .close, .m-log .close {
 	position: absolute;
-	top: 16px; right: 20px;
-	display: inline-block;
 	width: 10px; height: 10px;
 	background: url('../res/sprite.png') -600px -71px no-repeat;
 	cursor: pointer;
+}
+.m-log .bg {
+	width: 387px; height: 288px;
+}
+.m-log h2 {
+	margin-left: 40px; margin-top: 30px;
+}
+.m-log form {
+	margin-left: 40px; margin-top: 20px;
+	text-align: left;
+}
+.m-log .name, .m-log .pwd {
+	width: 294px; height: 44px;
+	font: 16px/44px 'Microsoft Yahei';
+}
+.m-log .pwd {
+	margin-top: 15px;
+}
+.m-log .btn {
+	margin-top: 29px;
+	width: 295px; height: 48px;
+	font: bold 16px 'Microsoft Yahei';
+	color: #fff;
+	border: none;
+	background: url('../res/sprite.png') -248px -2px no-repeat;
+}
+.m-log .close {
+	top: 10px; right: 10px;
+}
+/* 视频层 */
+.m-vd .bg {
+	width: 950px; height: 676px;
+}
+.m-vd h2 {
+	margin-left: 30px; margin-top: 29px;
+}
+.m-vd .close {
+	top: 16px; right: 20px;
 }
 .m-vd video {
 	margin-top: 22px;

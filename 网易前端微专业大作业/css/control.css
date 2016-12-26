@@ -5,10 +5,6 @@
 .z-hidden {
 	display: none;
 }
-/* 显示为block元素 */
-.z-show-blk {
-	display: block;
-}
 
 /* 关注按钮切换 */
 .m-tt .un-follow {

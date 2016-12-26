@@ -53,7 +53,10 @@ var curPage = 1; //当前页数
 /*
 *	登录框
 */
-var loginClose = null; //关闭登录层按钮
+var loginLayer = null; //登陆层
+var btnLogin = null; //登录按钮
+var inputName = null; //账号输入框
+var inputPwd = null; //密码输入框
 
 //程序开始
 //初始化 JSON ，兼容 IE 低版本
@@ -77,6 +80,7 @@ function initUI(){
 //添加事件
 function addEvent(){
 	addNotifyEvent();
+	addLoginEvent();
 	addFollowEvent();
 	addSlideEvent();
 	addTabEvent();
@@ -283,6 +287,21 @@ function addNotifyEvent(){
 	});
 }
 
+//登录事件
+function addLoginEvent(){
+	btnLogin = document.getElementById('btn-login');
+	inputName = document.getElementById('userName');
+	inputPwd = document.getElementById('password');
+	loginLayer = document.getElementById('popup-login');
+	//关闭登录层按钮
+	var btnClose = document.getElementById('btn-close-login');
+	compatibility.addEvent(btnClose, 'click', function(event){
+		compatibility.addClass(loginLayer, 'z-hidden');
+		//重新可以滚动
+		canScroll = true;
+	});
+}
+
 //关注按钮事件
 function addFollowEvent(){
 	var btnFollow = document.getElementById('btn-follow');
@@ -294,6 +313,11 @@ function addFollowEvent(){
 		}else{
 			compatibility.replaceClass(btnFollow, 'un-follow', 'follow');
 		}
+
+		//本地测试
+		compatibility.removeClass(loginLayer, 'z-hidden');
+		//浮层弹出后不能滚动
+		canScroll = false;
 	});
 }
 
@@ -481,7 +505,7 @@ function addFloatEvent(){
 	//鼠标移出事件
 	compatibility.addEvent(floatLayer, 'mouseleave', function(event){
 		//鼠标移出隐藏浮层
-		compatibility.replaceClass(floatLayer, 'z-hidden', 'z-show-blk');
+		compatibility.addClass(floatLayer, 'z-hidden');
 		//移除浮层后开启滚动
 		canScroll = true;
 	});
@@ -502,7 +526,7 @@ function addFloatEvent(){
 			floatLayer.style.top = rect.top - 11 + 'px';
 			floatLayer.style.left = rect.left - 11 + 'px';
 			//显示浮层
-			compatibility.replaceClass(floatLayer, 'z-show-blk', 'z-hidden');
+			compatibility.removeClass(floatLayer, 'z-hidden');
 			//因为浮层使用 position: fixed 来定位，如果移入浮层后滚动会导致浮层错位，所以关闭了滚动
 			canScroll = false;
 		}
@@ -537,20 +561,28 @@ function setFloatLayer(index){
 function addVideoEvent(){
 	//视频层
 	var videoLayer = document.getElementById('popup-video');
-	console.log(videoLayer)
 	//视频
 	var video = videoLayer.querySelector('video');
 	//播放视频按钮
-	var playBtn = document.getElementById('btn-play-video');
-	compatibility.addEvent(playBtn, 'click', function(event){
-		console.log(123);
-		compatibility.removeClass(videoLayer, 'm-vd');
+	var btnPlay = document.getElementById('btn-play-video');
+	compatibility.addEvent(btnPlay, 'click', function(event){
+		compatibility.removeClass(videoLayer, 'z-hidden');
+		//自动播放视频
+		if(video) video.play();
+		//浮层弹出后不能滚动
+		canScroll = false;
 	});
 	//关闭视频层按钮
-	var closeBtn = document.getElementById('btn-close-video');
-	compatibility.addEvent(closeBtn, 'click', function(event){
-		console.log(456);
+	var btnClose = document.getElementById('btn-close-video');
+	compatibility.addEvent(btnClose, 'click', function(event){
 		compatibility.addClass(videoLayer, 'z-hidden');
+		//关闭视频后重置视频进度
+		if(video){
+			video.currentTime = 0;
+			video.pause();
+		}
+		//重新可以滚动
+		canScroll = true;
 	});
 }
 

@@ -204,13 +204,18 @@
 	<!-- /最外围包裹层 -->
 
 	<!-- 登录层 -->
-	<div id="popup-login" class="m-login z-hidden">
+	<div id="popup-login" class="m-log z-hidden">
 		<div class="wrap">
 			<div class="bg">
 				<h2>登录网易云课堂</h2>
 				<span id="btn-close-login" class="close"></span>
+				<form action="#">
+					<p><input id="userName" class="name" type="text" name="userName" placeholder="账号"></p>
+					<p><input id="password" class="pwd" type="password" name="password" placeholder="密码"></p>
+					<p><button id="btn-login" class="btn" type="submit">登 录</button></p>
+				</form>
 			</div>
-		<div>
+		</div>
 	</div>
 	<!-- /登录层 -->
 
@@ -220,7 +225,7 @@
 			<div class="bg">
 				<h2>请观看下面的视频</h2>
 				<span id="btn-close-video" class="close"></span>
-				<video width="889px" height="567px" controls><!-- autoplay -->
+				<video width="889px" height="567px" controls>
 					<source src="http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F5S_shd.mp4" type="video/mp4">
 					您的浏览器不支持 video 标签
 				</video>
