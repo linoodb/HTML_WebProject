@@ -1,7 +1,7 @@
 /*
 *	屏幕宽度
 */
-var SCREEN_SIZE = 1205; //窗口宽度<1205 时，使用小屏视觉布局；窗口宽度>=1205 时，使用大屏视觉布局
+var SCREEN_LIMIT = 1205; //窗口宽度<1205 时，使用小屏视觉布局；窗口宽度>=1205 时，使用大屏视觉布局
 /*
 *	请求服务端的 URL
 */
@@ -11,9 +11,9 @@ var FOLLOW_URL = 'http://study.163.com/webDev/attention.htm'; //关注 URL
 var LOGIN_URL = 'http://study.163.com/webDev/login.htm?'; //用户登录 URL
 var VIDEO_URL = 'http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F5S_shd.mp4'; //视频 URL
 /*
-*	关注按钮
+*	顶部通知条
 */
-var isFollow = false; //是否关注
+var headNotify = null;
 /*
 *	轮播图
 */
@@ -54,9 +54,10 @@ var curPage = 1; //当前页数
 *	登录框
 */
 var loginLayer = null; //登陆层
-var btnLogin = null; //登录按钮
+var loginForm = null; //表单
 var inputName = null; //账号输入框
 var inputPwd = null; //密码输入框
+var btnLogin = null; //登录按钮
 
 //程序开始
 //初始化 JSON ，兼容 IE 低版本
@@ -72,6 +73,8 @@ function init(){
 
 //初始化界面
 function initUI(){
+	initNotify();
+	initLogin();
 	initSlide();
 	inisScroll();
 	initCourse();
@@ -95,6 +98,27 @@ function setAnimation(){
 	setScrollAnimation();
 }
 
+//初始化顶部通知条
+function initNotify(){
+	headNotify = document.getElementById('head-notify');
+	var cookie = compatibility.getCookie();
+	//根据 Cookie 决定是否显示顶部通知条
+	if(cookie.showNotify && cookie.showNotify === 'false') compatibility.addClass(headNotify, 'z-hidden');
+}
+
+//初始化登录
+function initLogin(){
+	loginLayer = document.getElementById('popup-login');
+	loginForm = document.getElementById('loginForm');
+	inputName = compatibility.getElementsByClassName(loginForm, 'name')[0];
+	inputPwd = compatibility.getElementsByClassName(loginForm, 'pwd')[0];
+	btnLogin = compatibility.getElementsByClassName(loginForm, 'btn')[0];
+
+	//本地测试，直接设置了固定的用户账号和密码
+	inputName.value = 'studyOnline';
+	inputPwd.value = 'study.163.com';
+}
+
 //初始化轮播图
 function initSlide(){
 	slideContainer = document.getElementById('head-slide');
@@ -115,7 +139,7 @@ function inisScroll(){
 	// scrollData = JSON.parse(TOP_DATA);
 
 	//通过 AJAX 请求服务端数据，只需请求一次
-	compatibility.requestServer('GET', TOP_URL, function(data){
+	compatibility.requestServer('GET', TOP_URL, null, null, function(data){
 		//转化为 JS 对象
 		scrollData = JSON.parse(data);
 		//创建排行榜列表项
@@ -150,7 +174,7 @@ function changeCourse(param){
 	//拼接请求的参数
 	var targetURL = COURSES_URL + compatibility.serialize(param);
 	//通过 AJAX 请求服务端数据
-	compatibility.requestServer('GET', targetURL, function(data){
+	compatibility.requestServer('GET', targetURL, null, null, function(data){
 		//转化为 JS 对象
 		courseData = JSON.parse(data);
 		//填充课程列表项
@@ -275,24 +299,20 @@ function setCourseItem(){
 
 // 顶部通知栏事件
 function addNotifyEvent(){
-	var btnNotify = document.getElementById('head-notify');
-	var btnClose = compatibility.getElementsByClassName(btnNotify, 'close')[0];
-	var btnCloseFv = compatibility.getElementsByClassName(btnNotify, 'close-fv')[0];
+	var btnClose = compatibility.getElementsByClassName(headNotify, 'close')[0];
+	var btnCloseFv = compatibility.getElementsByClassName(headNotify, 'close-fv')[0];
 	compatibility.addEvent(btnClose, 'click', function(event){
-		compatibility.addClass(btnNotify, 'z-hidden');
+		compatibility.addClass(headNotify, 'z-hidden');
 	});
 	compatibility.addEvent(btnCloseFv, 'click', function(event){
-		compatibility.addClass(btnNotify, 'z-hidden');
-		//处理 Cookies ，以后登录同一账号不会再出现
+		compatibility.addClass(headNotify, 'z-hidden');
+		//设置 Cookies ，以后登录顶部通知条不会再出现
+		compatibility.setCookie('showNotify', 'false', new Date('Fri, 31 Dec 9999 23:59:59 GMT'));
 	});
 }
 
 //登录事件
 function addLoginEvent(){
-	btnLogin = document.getElementById('btn-login');
-	inputName = document.getElementById('userName');
-	inputPwd = document.getElementById('password');
-	loginLayer = document.getElementById('popup-login');
 	//关闭登录层按钮
 	var btnClose = document.getElementById('btn-close-login');
 	compatibility.addEvent(btnClose, 'click', function(event){
@@ -300,24 +320,60 @@ function addLoginEvent(){
 		//重新可以滚动
 		canScroll = true;
 	});
+	//提交表单事件
+	compatibility.addEvent(loginForm, 'submit', function(event){
+
+		//阻止默认事件
+		compatibility.stopDefault(event);
+
+		//表单验证，账号密码不能为空
+		if(inputName.value === '' || inputPwd.value === ''){
+			alert('账号或密码不能为空');
+			return;
+		}
+		//使用 MD5 加密账号和密码
+		var obj = {
+			userName: md5(inputName.value),
+			password: md5(inputPwd.value)
+		};
+		//拼接链接
+		var url = LOGIN_URL + compatibility.serialize(obj);
+		//调用服务器 Ajax 登录
+		compatibility.requestServer('GET', url, 'application/x-www-form-urlencoded', null, function(data){
+			var data = JSON.parse(data);
+			switch (data){
+				case 1:
+					alert('登录成功');
+					break;
+				case 0:
+					alert('登录失败，账号或密码错误');
+					break;
+			}
+		});
+	});
 }
 
 //关注按钮事件
 function addFollowEvent(){
 	var btnFollow = document.getElementById('btn-follow');
 	compatibility.addEvent(btnFollow, 'click', function(event){
-		//先要判断 Cookies ，如果没有登录则弹出登录框
-		isFollow = !isFollow;
-		if(isFollow){
-			compatibility.replaceClass(btnFollow, 'follow', 'un-follow');
+		//先根据 Cookies 判断是否登录，如果没有登录则弹出登录框
+		var cookie = compatibility.getCookie();
+		if(!cookie.loginSuc){
+			//从来没有登录过的，弹出登录层
+			showLoginLayer();
 		}else{
-			compatibility.replaceClass(btnFollow, 'un-follow', 'follow');
+			//已经登录成功的，调用关注 API，并设置关注成功的 Cookie
+			if(cookie.loginSuc === 'true'){
+				compatibility.requestServer('GET', FOLLOW_URL, null, null, function(data){
+					console.log(data);
+				});
+				compatibility.replaceClass(btnFollow, 'un-follow', 'follow');
+			}else if(cookie.loginSuc === 'false'){
+				//曾经登陆过的，但是退出了登录状态的
+				//大作业暂时没有这个要求，先闲置
+			}
 		}
-
-		//本地测试
-		compatibility.removeClass(loginLayer, 'z-hidden');
-		//浮层弹出后不能滚动
-		canScroll = false;
 	});
 }
 
@@ -548,8 +604,9 @@ function setFloatLayer(index){
 	//机构发布者
 	var provider_tag = compatibility.getElementsByClassName(floatLayer, 'provider')[0];
 	provider_tag.innerHTML = '发布者：' + courseData.list[index].provider;
-	//分类（服务端categoryName返回null？？？，可能会暂时使用targetUser）
+	//分类
 	var category_tag = compatibility.getElementsByClassName(floatLayer, 'category')[0];
+	//分类categoryName的数据服务端返回null？？？，可能会暂时使用targetUser
 	// category_tag.innerHTML = '分类：' + courseData.list[index].targetUser;
 	category_tag.innerHTML = courseData.list[index].categoryName ? ('分类：' + courseData.list[index].categoryName) : '分类：无';
 	//描述
@@ -576,7 +633,7 @@ function addVideoEvent(){
 	var btnClose = document.getElementById('btn-close-video');
 	compatibility.addEvent(btnClose, 'click', function(event){
 		compatibility.addClass(videoLayer, 'z-hidden');
-		//关闭视频后重置视频进度
+		//关闭视频后暂停播放，并重置视频进度
 		if(video){
 			video.currentTime = 0;
 			video.pause();
@@ -612,5 +669,12 @@ function addEquipEvent(){
 			if(!canScroll) compatibility.stopDefault(event);
 		}
 	})
+}
+
+//显示登录层
+function showLoginLayer(){
+	compatibility.removeClass(loginLayer, 'z-hidden');
+	//浮层弹出后不能滚动
+	canScroll = false;
 }
 

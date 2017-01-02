@@ -13,7 +13,7 @@ compatibility.initJSON = function(){
 }
 
 //AJAX 调用，请求服务端数据
-compatibility.requestServer = function(method, url, callback){
+compatibility.requestServer = function(method, url, header, data, callback){
 	//创建 XHR 对象
 	var xhr = null;
 	//兼容 IE
@@ -35,7 +35,11 @@ compatibility.requestServer = function(method, url, callback){
 	});
 	//向服务端发起请求
 	xhr.open(method, url, true);
-	xhr.send(null);
+    if(header){
+        console.log(header);
+        xhr.setRequestHeader('Content-Type', header);
+    }
+	xhr.send(data);
 }
 
 //传入的 data 一般类似于 {name1:value1, name2:value2,...}
@@ -171,4 +175,43 @@ compatibility.replaceClass = function(node, newClass, oldClass){
         }
     }
     node.className = classList.join(' ');
+}
+
+//设置 Cookie
+compatibility.setCookie = function(name, value, expires, path, domain, secure){
+    var cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value);
+    if(expires) cookie += '; expires=' + expires.toUTCString();
+    if(path) cookie += '; path=' + path;
+    if(domain) cookie += '; domain=' + domain;
+    if(secure) cookie += '; secure=' + secure;
+    document.cookie = cookie;
+}
+
+//获取 Cookie
+compatibility.getCookie = function(){
+    var cookie = {};
+    var all = document.cookie;
+    if(all === '') return cookie;
+    //以分号加空格分隔
+    var list = all.split('; ');
+    for(var i = 0, length = list.length; i < length; i ++){
+        var item = list[i];
+        //取等号两边的键和值
+        var p = item.indexOf('=');
+        var name = item.substring(0, p);
+        name = decodeURIComponent(name);
+        var value = item.substring(p + 1);
+        value = decodeURIComponent(value);
+        cookie[name] = value;
+    }
+    return cookie;
+}
+
+//删除 Cookie
+compatibility.removeCookie = function(name, path, domain){
+    var cookie = encodeURIComponent(name) + '=';
+    if(path) cookie += '; path=' + path;
+    if(domain) cookie += '; domain=' + domain;
+    cookie += '; max-age=0';
+    document.cookie = cookie;
 }
