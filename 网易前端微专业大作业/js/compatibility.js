@@ -35,10 +35,7 @@ compatibility.requestServer = function(method, url, header, data, callback){
 	});
 	//向服务端发起请求
 	xhr.open(method, url, true);
-    if(header){
-        console.log(header);
-        xhr.setRequestHeader('Content-Type', header);
-    }
+    if(header) xhr.setRequestHeader('Content-Type', header);
 	xhr.send(data);
 }
 

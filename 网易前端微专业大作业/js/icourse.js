@@ -3,6 +3,10 @@
 */
 var SCREEN_LIMIT = 1205; //窗口宽度<1205 时，使用小屏视觉布局；窗口宽度>=1205 时，使用大屏视觉布局
 /*
+*	Cookie 有效期（永久）
+*/
+var COOKIE_EXPIRES = 'Fri, 31 Dec 9999 23:59:59 GMT';
+/*
 *	请求服务端的 URL
 */
 var COURSES_URL = 'http://study.163.com/webDev/couresByCategory.htm?'; //课程列表 URL
@@ -15,6 +19,10 @@ var VIDEO_URL = 'http://mov.bn.netease.com/open-movie/nos/mp4/2014/12/30/SADQ86F
 */
 var headNotify = null;
 /*
+*	关注栏
+*/
+var btnFollow = null; //关注按钮
+/*
 *	轮播图
 */
 var slideContainer = null; //轮播图容器
@@ -25,6 +33,9 @@ var isSlideMove = true; //控制是否进行轮播
 var timeID = null; //时间计时器 ID
 var animationID = null; //动画时间计时器 ID
 var delayID = null; //延迟计时器 ID
+/*
+*	选项卡
+*/
 var designTab = null; //产品设计选项卡
 var programTab = null; //编程语言选项卡
 /*
@@ -44,7 +55,10 @@ var COURSE_DESIGN = 10; //产品设计
 var COURSE_PROGRAM = 20; //编程语言
 var courseList = null; //课程列表
 var courseData = null; //课程数据
-var floatLayer = null; //课程卡片浮层
+/*
+*	课程浮层
+*/
+var floatLayer = null; //课程浮层
 var canScroll = true; //是否可滚动
 /*
 *	翻页器
@@ -75,6 +89,7 @@ function init(){
 function initUI(){
 	initNotify();
 	initLogin();
+	initFollow();
 	initSlide();
 	inisScroll();
 	initCourse();
@@ -114,9 +129,17 @@ function initLogin(){
 	inputPwd = compatibility.getElementsByClassName(loginForm, 'pwd')[0];
 	btnLogin = compatibility.getElementsByClassName(loginForm, 'btn')[0];
 
-	//本地测试，直接设置了固定的用户账号和密码
+	//本地测试debug使用，直接设置了固定的用户账号和密码方便登录测试
 	inputName.value = 'studyOnline';
 	inputPwd.value = 'study.163.com';
+}
+
+//初始化关注
+function initFollow(){
+	btnFollow = document.getElementById('btn-follow');
+	var cookie = compatibility.getCookie();
+	//根据 Cookie 决定关注按钮的样式
+	if(cookie.followSuc && cookie.followSuc === 'true') compatibility.replaceClass(btnFollow, 'follow', 'un-follow');
 }
 
 //初始化轮播图
@@ -134,11 +157,11 @@ function initSlide(){
 //初始化排行榜
 function inisScroll(){
 	scroll = document.getElementById('top-scroll');
-	//本地测试使用
+	//本地测试debug使用
 	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
 	// scrollData = JSON.parse(TOP_DATA);
 
-	//通过 AJAX 请求服务端数据，只需请求一次
+	//通过 AJAX 请求服务端数据，只请求一次
 	compatibility.requestServer('GET', TOP_URL, null, null, function(data){
 		//转化为 JS 对象
 		scrollData = JSON.parse(data);
@@ -153,7 +176,7 @@ function inisScroll(){
 
 function initCourse(){
 	courseList = document.getElementById('coures-list');
-	//本地测试使用
+	//本地测试debug使用
 	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
 	// courseData = JSON.parse(COURSES_DATA);
 
@@ -307,7 +330,7 @@ function addNotifyEvent(){
 	compatibility.addEvent(btnCloseFv, 'click', function(event){
 		compatibility.addClass(headNotify, 'z-hidden');
 		//设置 Cookies ，以后登录顶部通知条不会再出现
-		compatibility.setCookie('showNotify', 'false', new Date('Fri, 31 Dec 9999 23:59:59 GMT'));
+		compatibility.setCookie('showNotify', 'false', new Date(COOKIE_EXPIRES));
 	});
 }
 
@@ -316,36 +339,32 @@ function addLoginEvent(){
 	//关闭登录层按钮
 	var btnClose = document.getElementById('btn-close-login');
 	compatibility.addEvent(btnClose, 'click', function(event){
-		compatibility.addClass(loginLayer, 'z-hidden');
-		//重新可以滚动
-		canScroll = true;
+		hideLoginLayer();
 	});
 	//提交表单事件
 	compatibility.addEvent(loginForm, 'submit', function(event){
-
-		//阻止默认事件
+		//阻止默认表单提交事件，改由 Ajax 提交
 		compatibility.stopDefault(event);
-
 		//表单验证，账号密码不能为空
 		if(inputName.value === '' || inputPwd.value === ''){
 			alert('账号或密码不能为空');
 			return;
 		}
 		//使用 MD5 加密账号和密码
-		var obj = {
-			userName: md5(inputName.value),
-			password: md5(inputPwd.value)
-		};
+		var obj = { userName: md5(inputName.value), password: md5(inputPwd.value) };
 		//拼接链接
 		var url = LOGIN_URL + compatibility.serialize(obj);
 		//调用服务器 Ajax 登录
 		compatibility.requestServer('GET', url, 'application/x-www-form-urlencoded', null, function(data){
-			var data = JSON.parse(data);
-			switch (data){
-				case 1:
-					alert('登录成功');
+			switch (JSON.parse(data)){
+				case 1: //登录成功
+					alert('登录成功，欢迎你：' + inputName.value);
+					//设置登录 Cookie
+					compatibility.setCookie('loginSuc', 'true', new Date(COOKIE_EXPIRES));
+					//隐藏登录层
+					hideLoginLayer();
 					break;
-				case 0:
+				case 0: //登录失败
 					alert('登录失败，账号或密码错误');
 					break;
 			}
@@ -355,7 +374,6 @@ function addLoginEvent(){
 
 //关注按钮事件
 function addFollowEvent(){
-	var btnFollow = document.getElementById('btn-follow');
 	compatibility.addEvent(btnFollow, 'click', function(event){
 		//先根据 Cookies 判断是否登录，如果没有登录则弹出登录框
 		var cookie = compatibility.getCookie();
@@ -363,15 +381,27 @@ function addFollowEvent(){
 			//从来没有登录过的，弹出登录层
 			showLoginLayer();
 		}else{
-			//已经登录成功的，调用关注 API，并设置关注成功的 Cookie
-			if(cookie.loginSuc === 'true'){
-				compatibility.requestServer('GET', FOLLOW_URL, null, null, function(data){
-					console.log(data);
-				});
-				compatibility.replaceClass(btnFollow, 'un-follow', 'follow');
-			}else if(cookie.loginSuc === 'false'){
-				//曾经登陆过的，但是退出了登录状态的
-				//大作业暂时没有这个要求，先闲置
+			//已经登录成功，但是还没关注或者取消关注的
+			if(!cookie.followSuc || cookie.followSuc === 'false'){
+				//调用关注 API，并设置关注成功的 Cookie
+				if(cookie.loginSuc === 'true'){
+					compatibility.requestServer('GET', FOLLOW_URL, null, null, function(data){
+						switch (JSON.parse(data)){
+							case 1: //关注成功
+								//设置关注 Cookie
+								compatibility.setCookie('followSuc', 'true', new Date(COOKIE_EXPIRES));
+								//按钮变为已关注
+								compatibility.replaceClass(btnFollow, 'follow', 'un-follow');
+								break;
+						}
+					});
+				}else if(cookie.loginSuc === 'false'){
+					//已经登录过，后来退出登录的
+					//暂无要求需要实现此功能
+				}
+			}else if(cookie.followSuc && cookie.followSuc === 'true'){
+				//已经关注过，后来取消关注的
+				//暂无要求需要实现此功能
 			}
 		}
 	});
@@ -530,7 +560,7 @@ function setScrollAnimation(){
         scrollCount++;
     }, DELAY_TIME);
 
-    //本地测试使用
+    //本地测试debug使用
     // clearInterval(foreverID);
 }
 
@@ -678,3 +708,16 @@ function showLoginLayer(){
 	canScroll = false;
 }
 
+//隐藏登录层
+function hideLoginLayer(){
+	compatibility.addClass(loginLayer, 'z-hidden');
+	//重新可以滚动
+	canScroll = true;
+}
+
+//本地测试debug使用，清除所有 Cookie
+function clearAllCookie(){
+	compatibility.removeCookie('showNotify');
+	compatibility.removeCookie('loginSuc');
+	compatibility.removeCookie('followSuc');
+}
