@@ -3,8 +3,7 @@
 /* m = 模块 */
 
 /* 最外围包裹层 */
-/* x = max */
-.x-wrap {
+.g-wrap {
 	position: relative;
 	margin: 0 auto;
 	min-width: 1204px; max-width: 1616px;
@@ -18,9 +17,8 @@
 	font: 12px/36px 'Microsoft Yahei';
 	background-color: #f3f3f3;
 }
-.m-ntf p {
-	position: absolute;
-	left: 206px;
+.m-ntf>.content {
+	position: absolute; left: 12%;
 	color: #333;
 }
 .m-ntf a {
@@ -29,20 +27,20 @@
 .m-ntf a:hover {
 	text-decoration: underline;
 }
-.m-ntf div {
-	position: absolute;
-	right: 270px;
+.m-ntf>.wrap {
+	position: absolute; right: 12%;
 }
 .m-ntf .close {
 	display: inline-block;
 	width: 9px; height: 9px;
 	background: url('../res/sprite.png') -623px -68px no-repeat;
-	cursor: pointer;
 }
 /* fv = forever */
 .m-ntf .close-fv {
 	margin-left: 6px;
 	color: #333;
+}
+.m-ntf .close, .m-ntf .close-fv{
 	cursor: pointer;
 }
 
@@ -58,51 +56,46 @@
 /* tt = title */
 /* fl = follow */
 .m-tt {
-	position: absolute; left: 10%; bottom: 0px;
+	position: absolute; left: 12%; bottom: 0px;
 	font-size: 0;
 }
-.m-tt .tt-wrap, .m-tt .fl-wrap {
-	display: inline-block;
-}
-.m-tt .tt-wrap>* {
+.m-tt * {
 	display: inline-block;
 	vertical-align: bottom;
+}
+.m-tt .wrap1 {
 	color: #39a030;
 }
-.m-tt .logo {
+.m-tt .wrap1>.logo {
 	font: bold 28px/28px 'GillSansMT','Microsoft Yahei';
 }
 /* sep = separate */
-.m-tt .sep {
+.m-tt .wrap1>.sep {
+	margin: 0 11px 0 10px;
 	font: 24px 'Times New Roman','Microsoft Yahei';
-	margin-left: 10px; margin-right: 11px;
 }
-.m-tt .tt-wrap>h1 {
+.m-tt .wrap1>h1 {
 	font: 22px 'HirginoSansGB','Microsoft Yahei';
 	color: #333;
 }
-.m-tt .fl-wrap * {
-	display: inline-block;
-	vertical-align: bottom;
-}
-.m-tt .btn-fl {
+.m-tt .wrap2>.follow {
 	margin-left: 31px;
 	cursor: pointer;
 }
-.m-tt .fans {
+.m-tt .wrap2>.fans {
 	margin-left: 14px;
 	font: 12px/20px 'simsun','Microsoft Yahei';
 	color: #666;
 }
-.m-tt .fans span+span {
+.m-tt .wrap2>.fans span+span {
 	margin-left: 7px;
 }
 /* 导航区 */
 .m-nav {
-	position: absolute; right: 10%; bottom: 0px;
+	position: absolute; right: 12%; bottom: 0px;
 	font-size: 0;
 }
-.m-nav ul, .m-nav li, .m-nav span {
+.m-nav>ul, .m-nav li, .m-nav>.search {
 	display: inline-block;
 }
 .m-nav li+li {
@@ -115,14 +108,14 @@
 .m-nav a:hover {
 	color: #39a030;
 }
-.m-nav .btn-search {
+.m-nav>.search {
 	width: 19px; height: 19px;
 	margin-left: 30px;
 	vertical-align: bottom;
 	background: url('../res/sprite.png') -576px -50px no-repeat;
 	cursor: pointer;
 }
-.m-nav .btn-search:hover {
+.m-nav>.search:hover {
 	background: url('../res/sprite.png') -597px -50px no-repeat;
 }
 /* 轮播图 */
@@ -132,7 +125,7 @@
 	text-align: center;
 	font-size: 0;
 }
-.m-sld .slide {
+.m-sld>.slide {
 	position: relative;
     overflow: hidden;
 }
@@ -140,7 +133,7 @@
 	position: relative; left: 50%;
 	margin-left: -100%;
 }
-.m-sld .selector {
+.m-sld>.selector {
 	display: inline-block;
 	position: relative; top: -30px;
 }
@@ -156,11 +149,11 @@
 /* 内容区域 */
 /* stn = section */
 .m-stn {
-	margin: 0 auto 60px auto;
 	width: 90%;
+	margin: 0 auto 60px auto;
 	font-size: 0;
 }
-.m-stn .item {
+.m-stn>.item {
 	position: relative;
 	display: inline-block;
 	width: 33.33%;
@@ -180,24 +173,24 @@
 }
 .m-stn .content {
 	position: relative; top: -13px;
-	padding-left: 20px; padding-right: 82px;
+	padding: 0 82px 0 20px;
 	overflow: hidden;
 }
-.m-stn .content h2 {
+.m-stn .content>h2 {
 	margin-bottom: 20px;
 	font: 22px 'Microsoft Yahei';
 	color: #333;
 }
-.m-stn .content p {
+.m-stn .content>p {
 	margin-bottom: 34px;
 	font: 14px/24px 'Microsoft Yahei';
 	color: #666;
 }
-.m-stn .content a {
+.m-stn .content>a {
 	font: 14px 'Microsoft Yahei';
 	color: #39a030;
 }
-.m-stn .content a:hover {
+.m-stn .content>a:hover {
 	text-decoration: underline;
 }
 
@@ -214,7 +207,7 @@
     text-align: center;
     font-size: 0;
 }
-.m-ad .wrap {
+.m-ad>.wrap {
     position: relative; left: 50%;
 	margin-left: -100%;
 }
@@ -243,11 +236,208 @@
 /* 主内容区域 */
 .g-main {
 	width: 80%;
-	margin: 0 auto -3px auto;
+	min-width: 961px; max-width: 1206px;
+	margin: 0 auto;
+}
+/* 主栏 */
+.m-main {
+	float: left;
+}
+.m-main>.wrap{
+    margin-right: 243px;
+}
+/* 选项卡 */
+.m-tab {
+	display: inline-block;
+	margin-bottom: 29px;
+	font-size: 0;
+	box-shadow: 1px 0 0 1px #ecebeb, 0 1px 2px 1px #d4d3d3, -1px 0 0 1px #ecebeb;
+}
+.m-tab:hover {
+	box-shadow: 0 2px 2px 2px #d4d3d3;
+}
+.m-tab>h2 {
+	display: inline-block;
+	width: 200px; height: 50px;
+	font: 20px/50px 'Microsoft Yahei';
+	color: #666;
+	text-align: center;
+	cursor: pointer;
+}
+/* 课程列表 */
+.m-list {
+	height: 1230px;
+	overflow: hidden;
+}
+.m-list ul {
+	margin-left: -20px;
+	font-size: 0;
+}
+.m-list a {
+	display: block;
+	height: 100%;
+}
+.m-list li {
+	display: inline-block;
+	width: 225px; height: 228px;
+	margin-left: 20px; margin-bottom: 20px;
+	background-color: #fff;
+	box-shadow: 1px 0 0 1px #f1f1f1, 0 1px 2px 1px #e6e6e6, -1px 0 0 1px #f1f1f1;
+	cursor: pointer;
+}
+.m-list li:hover {
+	box-shadow: 0 1px 0 1px #e6e6e6, 1px 0 0 1px #e6e6e6, 0 2px 2px 2px #e6e6e6, -1px 0 0 1px #e6e6e6;
+}
+.m-list .img-wrap {
+	width: 223px; height: 124px;
+	margin: 1px 1px 10px 1px;
+	overflow: hidden;
+}
+.m-list .img {
+	transition: all 1s;
+	-webkit-transition: all 1s;
+	-moz-transition: all 1s;
+	-o-transition: all 1s;
+	-ms-transition: all 1s;
+}
+.m-list li:hover .img {
+	transform: scale(1.2);
+	-webkit-transform: scale(1.2);
+	-moz-transform: scale(1.2);
+	-o-transform: scale(1.2);
+	-ms-transform: scale(1.2);
+}
+.m-list .name {
+	margin: 0 8px 10px 5px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+  	white-space: nowrap;
+	font: 12px/12px 'Microsoft Yahei';
+	color: #333;
+}
+.m-list li:hover .name {
+	color: #39a030;
+}
+.m-list .provider {
+	margin-left: 5px; margin-bottom: 10px;
+	font: 12px/12px 'Microsoft Yahei';
+	color: #999;
+}
+.m-list .icon-wrap {
+	display: inline-block;
+	margin-left: 5px; margin-bottom: 10px;
+	border: 1px solid #ddd;
+	border-radius: 2px;
+}
+.m-list .icon {
+	display: inline-block;
+	margin-left: 3px; margin-top: 3px;
+	width: 9px; height: 10px;
+	background: url('../res/sprite.png') -612px -71px no-repeat;
+}
+.m-list .learner {
+	display: inline-block;
+	margin: 0 3px 3px 5px;
+	font: 11px/10px 'Microsoft Yahei';
+	color: #999;
+}
+.m-list .price {
+	margin-left: 6px;
+	font: bold 12px/12px 'Microsoft Yahei';
+	color: #ff3f00;
+}
+/* 翻页器 */
+.m-page {
+	margin-top: 20px; margin-bottom: 120px;
+	font-size: 0;
+	text-align: right;
+}
+.m-page .arrow, .m-page ol, .m-page .item {
+	display: inline-block;
+}
+.m-page .arrow, .m-page .item {
+	text-align: center;
+	font: 14px 'Microsoft Yahei';
+	cursor: pointer;
+}
+.m-page .arrow {
+	width: 30px; height: 20px;
+	background-color: #9dd8b1;
+	color: #fff;
+}
+.m-page .item {
+	width: 20px; height: 20px;
+	margin-right: 10px;
+}
+.m-page .item:first-child {
+	margin-left: 10px;
+}
+.m-page .item:hover {
+	background-color: #9dd8b1;
+	color: #fff;
+}
+/* 课程卡片浮层 */
+.m-ft {
+	position: fixed; left: 0; top: 0;
+	background-color: #fff;
+	box-shadow: 0 -1px 2px 0 #d0cfd0, 1px 0 2px 0 #d1d0d0, 0 1px 2px 0 #c1c0c0, -1px 0 3px 0 #d4d3d3;
+}
+.m-ft .title {
+	margin-bottom: 20px;
+}
+.m-ft .img {
+	float: left;
+	margin: 11px 20px 0 11px;
+}
+.m-ft .wrap {
+	padding-top: 15px;
+	margin-right: 20px;
+}
+.m-ft .name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+  	white-space: nowrap;
+	font: 18px/18px 'Microsoft Yahei';
+	color: #333;
+}
+.m-ft .icon {
+	display: inline-block;
+	margin-top: 18px;
+	width: 9px; height: 10px;
+	background: url('../res/sprite.png') -612px -71px no-repeat;
+}
+.m-ft .learner {
+	margin-left: 6px;
+	font: 12px/12px 'Microsoft Yahei';
+	color: #666;
+}
+.m-ft .provider {
+	margin-top: 13px;
+	font: 12px/12px 'Microsoft Yahei';
+	color: #666;
+}
+.m-ft .category {
+	margin-top: 8px;
+	font: 12px/12px 'Microsoft Yahei';
+	color: #666;
+}
+.m-ft .content {
+	display: table-cell;
+	width: 479px; height: 83px;
+	background-color: #f8f8f8;
+	vertical-align: middle;
+}
+.m-ft .description {
+	padding: 20px 33px 20px 20px;
+	font: 14px/24px 'Microsoft Yahei';
+	color: #666;
 }
 /* 侧栏 */
 .m-side {
+	position: relative;
+	top: 3px;
 	float: right;
+	margin-left: -223px;
 }
 /* 机构介绍 */
 /* itd = introduce */
@@ -348,196 +538,6 @@
 	margin-left: 6px;
 	font: 12px/12px 'Microsoft Yahei';
 	color: #999;
-}
-/* 主栏 */
-.m-main {
-	position: relative; top: -3px;
-	overflow: hidden;
-}
-/* 选项卡 */
-.m-tab {
-	display: inline-block;
-	margin-bottom: 29px;
-	font-size: 0;
-	box-shadow: 1px 0 0 1px #ecebeb, 0 1px 2px 1px #d4d3d3, -1px 0 0 1px #ecebeb;
-}
-.m-tab:hover {
-	box-shadow: 0 2px 2px 2px #d4d3d3;
-}
-.m-tab h2 {
-	display: inline-block;
-	width: 200px; height: 50px;
-	font: 20px/50px 'Microsoft Yahei';
-	color: #666;
-	text-align: center;
-	cursor: pointer;
-}
-/* 课程列表 */
-.m-list {
-	height: 1230px;
-	overflow: hidden;
-}
-.m-list ul {
-	margin-left: -20px;
-	font-size: 0;
-}
-.m-list a {
-	display: block;
-	height: 100%;
-}
-.m-list li {
-	display: inline-block;
-	width: 225px; height: 228px;
-	margin-left: 20px; margin-bottom: 20px;
-	background-color: #fff;
-	box-shadow: 1px 0 0 1px #f1f1f1, 0 1px 2px 1px #e6e6e6, -1px 0 0 1px #f1f1f1;
-	cursor: pointer;
-}
-.m-list li:hover {
-	box-shadow: 0 1px 0 1px #e6e6e6, 1px 0 0 1px #e6e6e6, 0 2px 2px 2px #e6e6e6, -1px 0 0 1px #e6e6e6;
-}
-.m-list .img-wrap {
-	width: 223px; height: 124px;
-	margin: 1px 1px 10px 1px;
-	overflow: hidden;
-}
-.m-list .img {
-	transition: all 1s;
-	-webkit-transition: all 1s;
-	-moz-transition: all 1s;
-	-o-transition: all 1s;
-	-ms-transition: all 1s;
-}
-.m-list li:hover .img {
-	transform: scale(1.2);
-	-webkit-transform: scale(1.2);
-	-moz-transform: scale(1.2);
-	-o-transform: scale(1.2);
-	-ms-transform: scale(1.2);
-}
-.m-list .name {
-	margin: 0 8px 10px 5px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-  	white-space: nowrap;
-	font: 12px/12px 'Microsoft Yahei';
-	color: #333;
-}
-.m-list li:hover .name {
-	color: #39a030;
-}
-.m-list .provider {
-	margin-left: 5px; margin-bottom: 10px;
-	font: 12px/12px 'Microsoft Yahei';
-	color: #999;
-}
-.m-list .icon-wrap {
-	display: inline-block;
-	margin-left: 5px; margin-bottom: 10px;
-	border: 1px solid #ddd;
-	border-radius: 2px;
-}
-.m-list .icon {
-	display: inline-block;
-	margin-left: 3px; margin-top: 3px;
-	width: 9px; height: 10px;
-	background: url('../res/sprite.png') -612px -71px no-repeat;
-}
-.m-list .learner {
-	display: inline-block;
-	margin: 0 3px 3px 5px;
-	font: 11px/10px 'Microsoft Yahei';
-	color: #999;
-}
-.m-list .price {
-	margin-left: 6px;
-	font: bold 12px/12px 'Microsoft Yahei';
-	color: #ff3f00;
-}
-/* 翻页器 */
-.m-page {
-	margin-top: 20px; margin-bottom: 120px;
-	font-size: 0;
-}
-.m-page .arrow, .m-page ol, .m-page .item {
-	display: inline-block;
-}
-.m-page .arrow, .m-page .item {
-	text-align: center;
-	font: 14px 'Microsoft Yahei';
-	cursor: pointer;
-}
-.m-page .arrow {
-	width: 30px; height: 20px;
-	background-color: #9dd8b1;
-	color: #fff;
-}
-.m-page .item {
-	width: 20px; height: 20px;
-	margin-right: 10px;
-}
-.m-page .item:first-child {
-	margin-left: 10px;
-}
-.m-page .item:hover {
-	background-color: #9dd8b1;
-	color: #fff;
-}
-/* 课程卡片浮层 */
-.m-ft {
-	position: fixed; left: 0; top: 0;
-	background-color: #fff;
-	box-shadow: 0 -1px 2px 0 #d0cfd0, 1px 0 2px 0 #d1d0d0, 0 1px 2px 0 #c1c0c0, -1px 0 3px 0 #d4d3d3;
-}
-.m-ft .title {
-	margin-bottom: 20px;
-}
-.m-ft .img {
-	float: left;
-	margin: 11px 20px 0 11px;
-}
-.m-ft .wrap {
-	padding-top: 15px;
-	margin-right: 20px;
-}
-.m-ft .name {
-	overflow: hidden;
-	text-overflow: ellipsis;
-  	white-space: nowrap;
-	font: 18px/18px 'Microsoft Yahei';
-	color: #333;
-}
-.m-ft .icon {
-	display: inline-block;
-	margin-top: 18px;
-	width: 9px; height: 10px;
-	background: url('../res/sprite.png') -612px -71px no-repeat;
-}
-.m-ft .learner {
-	margin-left: 6px;
-	font: 12px/12px 'Microsoft Yahei';
-	color: #666;
-}
-.m-ft .provider {
-	margin-top: 13px;
-	font: 12px/12px 'Microsoft Yahei';
-	color: #666;
-}
-.m-ft .category {
-	margin-top: 8px;
-	font: 12px/12px 'Microsoft Yahei';
-	color: #666;
-}
-.m-ft .content {
-	display: table-cell;
-	width: 479px; height: 83px;
-	background-color: #f8f8f8;
-	vertical-align: middle;
-}
-.m-ft .description {
-	padding: 20px 33px 20px 20px;
-	font: 14px/24px 'Microsoft Yahei';
-	color: #666;
 }
 
 /* 网页脚部 */

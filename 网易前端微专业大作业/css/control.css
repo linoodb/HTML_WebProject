@@ -7,33 +7,33 @@
 }
 
 /* 关注按钮切换 */
-.m-tt .un-follow {
+.m-tt .z-unfollow {
 	width: 54px; height: 21px;
 	background: url('../res/sprite.png') -464px -52px no-repeat;
 }
-.m-tt .un-follow:hover {
+.m-tt .z-unfollow:hover {
 	background: url('../res/sprite.png') -520px -52px no-repeat;
 }
-.m-tt .follow {
+.m-tt .z-follow {
 	width: 106px; height: 21px;
 	background: url('../res/sprite.png') -248px -52px no-repeat;
 }
-.m-tt .follow:hover {
+.m-tt .z-follow:hover {
 	background: url('../res/sprite.png') -356px -52px no-repeat;
 }
 
 /* 轮播图选择器（选中状态） */
-.m-sld .selected {
+.m-sld .z-sel {
 	background: url('../res/sprite.png') -588px -71px no-repeat;
 }
 
 /* 选项卡（选中状态） */
-.m-tab .selected {
+.m-tab .z-sel {
 	background-color: #39a030;
 	color: #fff;
 }
 
 /* 翻页器（选中状态） */
-.m-page .selected {
+.m-page .z-sel {
 	color: #39a030;
 }

@@ -15,11 +15,11 @@
 </head>
 <body>
 	<!-- 最外围包裹层，控制整个网页的居中 -->
-	<div class="x-wrap">
+	<div class="g-wrap">
 		<!-- 顶部通知条 -->
 		<div id="head-notify" class="m-ntf">
-			<p>网易云课堂微专业，帮助你掌握专业技能，令你求职或加薪多一份独特优势！<a href="#">立即查看&gt;</a></p>
-			<div><span class="close"></span><span class="close-fv">不再提示</span></div>
+			<p class="content">网易云课堂微专业，帮助你掌握专业技能，令你求职或加薪多一份独特优势！<a href="#">立即查看&gt;</a></p>
+			<div class="wrap"><span class="close"></span><span class="close-fv">不再提示</span></div>
 		</div>
 		<!-- /顶部通知条 -->
 
@@ -29,13 +29,13 @@
 			<div class="m-hdr">
 				<!-- 标题区 -->
 				<div class="m-tt">
-					<div class="tt-wrap">
+					<div class="wrap1">
 						<span class="logo">EDU</span>
 						<span class="sep">|</span>
 						<h1>网易教育产品部</h1>
 					</div>
-					<div class="fl-wrap">
-						<span id="btn-follow" class="btn-fl un-follow"></span>
+					<div class="wrap2">
+						<span id="btn-follow" class="follow z-unfollow"></span>
 						<div class="fans"><span>粉丝</span><span>45</span></div>
 					</div>
 				</div>
@@ -47,7 +47,7 @@
 						<li><a href="http://study.163.com/" target="_blank">网易云课堂</a></li>
 						<li><a href="http://www.icourse163.org/" target="_blank">中国大学MOOC</a></li>
 					</ul>
-					<span class="btn-search"></span>
+					<span class="search"></span>
 				</div>
 				<!-- /导航区 -->
 			</div>
@@ -103,7 +103,31 @@
 			</div>
 			<!-- /广告区域 -->
 			<!-- 主内容区域 -->
-			<div class="g-main">
+			<div class="g-main f-cb">
+				<!-- 主栏 -->
+				<div class="m-main">
+					<div class="wrap">
+						<!-- 选项卡 -->
+						<div id="main-tab" class="m-tab">
+							<h2 class="design z-sel">产品设计</h2>
+							<h2 class="program">编程语言</h2>
+						</div>
+						<!-- /选项卡 -->
+						<!-- 课程列表 -->
+						<div class="m-list">
+							<ul id="coures-list"></ul>
+						</div>
+						<!-- /课程列表 -->
+						<!-- 翻页器 -->
+						<div class="m-page">
+							<span id="page-left" class="arrow">&lt;</span>
+							<ol id="page-list"><li class="item z-sel">1</li><li class="item">2</li><li class="item">3</li><li class="item">4</li><li class="item">5</li></ol>
+							<span id="page-right" class="arrow">&gt;</span>
+						</div>
+						<!-- /翻页器 -->
+					</div>
+				</div>
+				<!-- /主栏 -->
 				<!-- 侧栏 -->
 				<div class="m-side">
 					<!-- 机构介绍视频 -->
@@ -123,31 +147,9 @@
 					<!-- /课程排行榜 -->
 				</div>
 				<!-- /侧栏 -->
-				<!-- 主栏 -->
-				<div class="m-main">
-					<!-- 选项卡 -->
-					<div id="main-tab" class="m-tab">
-						<h2 class="design selected">产品设计</h2>
-						<h2 class="program">编程语言</h2>
-					</div>
-					<!-- /选项卡 -->
-					<!-- 课程列表 -->
-					<div class="m-list">
-						<ul id="coures-list"></ul>
-					</div>
-					<!-- /课程列表 -->
-					<!-- 翻页器 -->
-					<div class="m-page">
-						<span id="page-left" class="arrow">&lt;</span>
-						<ol id="page-list"><li class="item selected">1</li><li class="item">2</li><li class="item">3</li><li class="item">4</li><li class="item">5</li></ol>
-						<span id="page-right" class="arrow">&gt;</span>
-					</div>
-					<!-- /翻页器 -->
-				</div>
-				<!-- /主栏 -->
 				<!-- 课程卡片浮层 -->
 				<div id="float-layer" class="m-ft z-hidden">
-					<div class="title clearfix">
+					<div class="title f-cb">
 						<img class="img" alt="课程图片" width="223px" height="124px">
 						<div class="wrap">
 							<h3 class="name"></h3>
@@ -234,11 +236,16 @@
 	</div>
 	<!-- /视频层 -->
 
-	<!-- 引入JavaScript -->
+	<!-- 引入的JavaScript -->
+	<!-- 兼容函数 -->
 	<script type="text/javascript" src="js/compatibility.js"></script>
+	<!-- MD5 加密 -->
 	<script type="text/javascript" src="js/md5.min.js"></script>
+	<!-- 本地测试模拟数据 -->
 	<script type="text/javascript" src="js/mock.js"></script>
+	<!-- 模板 -->
 	<script type="text/javascript" src="js/template.js"></script>
+	<!-- 逻辑控制 -->
 	<script type="text/javascript" src="js/icourse.js"></script>
 	<!-- /引入JavaScript -->
 </body>

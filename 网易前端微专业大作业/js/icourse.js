@@ -73,7 +73,7 @@ var inputName = null; //账号输入框
 var inputPwd = null; //密码输入框
 var btnLogin = null; //登录按钮
 
-//程序开始
+//程序入口
 //初始化 JSON ，兼容 IE 低版本
 compatibility.initJSON();
 init();
@@ -139,7 +139,7 @@ function initFollow(){
 	btnFollow = document.getElementById('btn-follow');
 	var cookie = compatibility.getCookie();
 	//根据 Cookie 决定关注按钮的样式
-	if(cookie.followSuc && cookie.followSuc === 'true') compatibility.replaceClass(btnFollow, 'follow', 'un-follow');
+	if(cookie.followSuc && cookie.followSuc === 'true') compatibility.replaceClass(btnFollow, 'z-follow', 'z-unfollow');
 }
 
 //初始化轮播图
@@ -188,6 +188,14 @@ function initCourse(){
 	changeCourse(param);
 }
 
+//本地测试debug
+var mParam = { pageNo: 1, psize: TOTAL_COURSES, type: COURSE_DESIGN };
+var mUrl = COURSES_URL + compatibility.serialize(mParam);
+compatibility.requestServer('GET', mUrl, null, null, function(data){
+	var mCourseData = JSON.parse(data);
+	console.log(mCourseData);
+});
+
 //向服务器请求课程列表
 //传入的参数 { pageNo: 1, psize: 20, type: 10 }
 //pageNo: 当前页码
@@ -215,7 +223,7 @@ function createSlideSelector(){
 		i_tag.setAttribute('dataset', i.toString());
 		//默认选中第一个选择器
 		if(i == 0){
-			compatibility.addClass(i_tag, 'selected');
+			compatibility.addClass(i_tag, 'z-sel');
 		}
 		slideSelector.appendChild(i_tag);
 	}
@@ -232,7 +240,7 @@ function createScrollItem(){
 		li_tag.innerHTML = TEMPLATE_M_TOP;
 		//添加类名
 		compatibility.addClass(li_tag, 'item');
-		compatibility.addClass(li_tag, 'clearfix');
+		compatibility.addClass(li_tag, 'f-cb');
 		//添加到父节点
 		scroll.appendChild(li_tag);
 	}
@@ -391,7 +399,7 @@ function addFollowEvent(){
 								//设置关注 Cookie
 								compatibility.setCookie('followSuc', 'true', new Date(COOKIE_EXPIRES));
 								//按钮变为已关注
-								compatibility.replaceClass(btnFollow, 'follow', 'un-follow');
+								compatibility.replaceClass(btnFollow, 'z-follow', 'z-unfollow');
 								break;
 						}
 					});
@@ -471,10 +479,10 @@ function goToSlide(index){
 function setSelector(){
 	//先重置所有选择器
 	for(var i = 0; i < slideData.total; i ++){
-		compatibility.removeClass(slideSelector.getElementsByTagName('i')[i], 'selected');
+		compatibility.removeClass(slideSelector.getElementsByTagName('i')[i], 'z-sel');
 	}
 	//再设置当前选中的选择器
-	compatibility.addClass(slideSelector.getElementsByTagName('i')[curSlide], 'selected');
+	compatibility.addClass(slideSelector.getElementsByTagName('i')[curSlide], 'z-sel');
 }
 
 //设置轮播图选项
@@ -530,20 +538,20 @@ function addTabEvent(){
 	compatibility.addEvent(tab, 'click', function(event){
 		event = event || window.event;
 		event.target = event.target || event.srcElement;
-		var curType = null; //当前点击的选项卡对应的服务端参数
-		if(!compatibility.hasClass(event.target, 'selected')){
+		var curType = null; //当前点击的选项卡对应请求的服务端参数
+		if(!compatibility.hasClass(event.target, 'z-sel')){
 			if(compatibility.hasClass(event.target, 'design')){
-				compatibility.removeClass(programTab, 'selected');
-				compatibility.addClass(designTab, 'selected');
+				compatibility.removeClass(programTab, 'z-sel');
+				compatibility.addClass(designTab, 'z-sel');
 				curType = COURSE_DESIGN;
 			}else if(compatibility.hasClass(event.target, 'program')){
-				compatibility.removeClass(designTab, 'selected');
-				compatibility.addClass(programTab, 'selected');
+				compatibility.removeClass(designTab, 'z-sel');
+				compatibility.addClass(programTab, 'z-sel');
 				curType = COURSE_PROGRAM;
 			}
 			//请求服务端数据
 			//根据当前页数决定请求的页数
-			//根据当前屏幕宽度决定请求的课程数量
+			//每次请求20门课程，宽屏可以完全显示20门，窄屏情况下只能显示15门，
 			//根据点击的选项卡决定请求的课程类型
 			var param = { pageNo: curPage, psize: TOTAL_COURSES, type: curType };
 			changeCourse(param);
