@@ -2,6 +2,8 @@
 *	屏幕宽度
 */
 var SCREEN_LIMIT = 1205; //窗口宽度<1205 时，使用小屏视觉布局；窗口宽度>=1205 时，使用大屏视觉布局
+var WIDE_SCREEN = 'WIDE_SCREEN'; //宽屏
+var NARROW_SCREEN = 'NARROW_SCREEN'; //窄屏
 /*
 *	Cookie 有效期（永久）
 */
@@ -39,31 +41,35 @@ var delayID = null; //延迟计时器 ID
 var designTab = null; //产品设计选项卡
 var programTab = null; //编程语言选项卡
 /*
-*	滚动排行榜
+*	热门排行榜
 */
 var TOTAL_SCROLL = 11; //排行榜列表项的数量
 var DELAY_TIME = 5000; //排行榜等待滚动的时长
 var SCROLL_TIME = 500; //滚动一次的时长（可自由设置）
-var scroll = null; //排行榜
+var hotRanking = null; //热门排行榜
 var scrollData = null; //排行榜数据
 var scrollCount = 0; //记录排行榜滚动的次数
 /*
 * 课程列表
 */
 var TOTAL_COURSES = 20; //列表项总数
-var COURSE_DESIGN = 10; //产品设计
-var COURSE_PROGRAM = 20; //编程语言
+var NARROW_SCREEN_COURSES = 15; //宽屏可显示的课程数
+var WIDE_SCREEN_COURSES = 20; //窄屏可显示的课程数
+var COURSE_DESIGN = 10; //产品设计（后端参数）
+var COURSE_PROGRAM = 20; //编程语言（后端参数）
+var currentScreen = ''; //当前屏幕属于宽屏还是窄屏
+var currentCourses = 0; //当前的课程数量
 var courseList = null; //课程列表
 var courseData = null; //课程数据
 /*
 *	课程浮层
 */
 var floatLayer = null; //课程浮层
-var canScroll = true; //是否可滚动
 /*
 *	翻页器
 */
 var curPage = 1; //当前页数
+var pageTurn = null; //翻页器
 /*
 *	登录框
 */
@@ -91,8 +97,9 @@ function initUI(){
 	initLogin();
 	initFollow();
 	initSlide();
-	inisScroll();
+	initHotRanking();
 	initCourse();
+	initPage();
 }
 
 //添加事件
@@ -104,13 +111,13 @@ function addEvent(){
 	addTabEvent();
 	addFloatEvent();
 	addVideoEvent();
-	addEquipEvent();
+	addBrowserEvent();
 }
 
 //设置动画
 function setAnimation(){
 	setSlideAnimation();
-	setScrollAnimation();
+	setRankingAnimation();
 }
 
 //初始化顶部通知条
@@ -124,7 +131,7 @@ function initNotify(){
 //初始化登录
 function initLogin(){
 	loginLayer = document.getElementById('popup-login');
-	loginForm = document.getElementById('loginForm');
+	loginForm = document.getElementById('login-form');
 	inputName = compatibility.getElementsByClassName(loginForm, 'name')[0];
 	inputPwd = compatibility.getElementsByClassName(loginForm, 'pwd')[0];
 	btnLogin = compatibility.getElementsByClassName(loginForm, 'btn')[0];
@@ -154,9 +161,9 @@ function initSlide(){
 	createSlideSelector();
 }
 
-//初始化排行榜
-function inisScroll(){
-	scroll = document.getElementById('top-scroll');
+//初始化最热排行榜
+function initHotRanking(){
+	hotRanking = document.getElementById('hot-ranking');
 	//本地测试debug使用
 	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
 	// scrollData = JSON.parse(TOP_DATA);
@@ -173,7 +180,6 @@ function inisScroll(){
 }
 
 //初始化课程列表
-
 function initCourse(){
 	courseList = document.getElementById('coures-list');
 	//本地测试debug使用
@@ -184,24 +190,30 @@ function initCourse(){
 	createCourseItem();
 
 	//默认请求第一页的产品设计，数量根据屏幕宽度来定
+	TOTAL_COURSES = document.body.clientWidth < SCREEN_LIMIT ? NARROW_SCREEN_COURSES : WIDE_SCREEN_COURSES;
 	var param = { pageNo: 1, psize: TOTAL_COURSES, type: COURSE_DESIGN };
-	changeCourse(param);
+	requestCourse(param);
+}
+
+//初始化翻页器
+function initPage(){
+	pageTurn = document.getElementById('page-turn');
 }
 
 //本地测试debug
-var mParam = { pageNo: 1, psize: TOTAL_COURSES, type: COURSE_DESIGN };
-var mUrl = COURSES_URL + compatibility.serialize(mParam);
-compatibility.requestServer('GET', mUrl, null, null, function(data){
-	var mCourseData = JSON.parse(data);
-	console.log(mCourseData);
-});
+// var mParam = { pageNo: 1, psize: TOTAL_COURSES, type: COURSE_DESIGN };
+// var mUrl = COURSES_URL + compatibility.serialize(mParam);
+// compatibility.requestServer('GET', mUrl, null, null, function(data){
+// 	var mCourseData = JSON.parse(data);
+// 	console.log(mCourseData);
+// });
 
 //向服务器请求课程列表
 //传入的参数 { pageNo: 1, psize: 20, type: 10 }
 //pageNo: 当前页码
 //psize: 每页返回数据个数
 //type: 筛选类型（10：产品设计；20：编程语言）
-function changeCourse(param){
+function requestCourse(param){
 	//拼接请求的参数
 	var targetURL = COURSES_URL + compatibility.serialize(param);
 	//通过 AJAX 请求服务端数据
@@ -210,6 +222,8 @@ function changeCourse(param){
 		courseData = JSON.parse(data);
 		//填充课程列表项
 		setCourseItem();
+		//设置翻页器
+		setPageTurn();
 	});
 }
 
@@ -242,7 +256,7 @@ function createScrollItem(){
 		compatibility.addClass(li_tag, 'item');
 		compatibility.addClass(li_tag, 'f-cb');
 		//添加到父节点
-		scroll.appendChild(li_tag);
+		hotRanking.appendChild(li_tag);
 	}
 }
 
@@ -259,7 +273,7 @@ function setScrollItem(){
 		//通过取余来确定索引的位置
 		index = (i + scrollCount) % length;
 		//获取列表项
-		li_tag = compatibility.getElementsByClassName(scroll, 'item')[i];
+		li_tag = compatibility.getElementsByClassName(hotRanking, 'item')[i];
 		//链接地址（暂时跳转到当前课程大图）
 		a_tag = li_tag.querySelector('a');
 		a_tag.href = scrollData[index].bigPhotoUrl;
@@ -276,12 +290,22 @@ function setScrollItem(){
 	}
 }
 
+//设置翻页器
+function setPageTurn(){
+	//先获取总课程数量
+	var totalCourse = courseData.totalCount;
+	//根据总课程数和宽窄屏来设置翻页器的数量
+	// var totalPage = parseInt(totalCourse / currentScreen)
+	var totalPage = courseData.totalPage;
+	console.log(totalPage)
+
+}
+
 //创建课程列表项
 function createCourseItem(){
 	//列表单项
 	var li_tag = null;
-	//宽屏或窄屏都创建全部列表项，窄屏使用 overflow: hidden 隐藏多余的列表项
-	//后续根据屏幕的宽度和用户点击的页数传递不同参数给服务器，确保所有的课程都会显示给用户观看
+	//总共创建20个课程项，根据服务端返回的课程数量来显示
 	for(var i = 0; i < TOTAL_COURSES; i ++){
 		li_tag = document.createElement('li');
 		//使用模板构建
@@ -366,7 +390,7 @@ function addLoginEvent(){
 		compatibility.requestServer('GET', url, 'application/x-www-form-urlencoded', null, function(data){
 			switch (JSON.parse(data)){
 				case 1: //登录成功
-					alert('登录成功，欢迎你：' + inputName.value);
+					alert('登录成功，欢迎您：' + inputName.value);
 					//设置登录 Cookie
 					compatibility.setCookie('loginSuc', 'true', new Date(COOKIE_EXPIRES));
 					//隐藏登录层
@@ -554,14 +578,14 @@ function addTabEvent(){
 			//每次请求20门课程，宽屏可以完全显示20门，窄屏情况下只能显示15门，
 			//根据点击的选项卡决定请求的课程类型
 			var param = { pageNo: curPage, psize: TOTAL_COURSES, type: curType };
-			changeCourse(param);
+			requestCourse(param);
 		}
 	});
 }
 
-//热门排行榜动画
+//排行榜动画
 //每次移动一个列表项高度然后重置列表到移动前的位置，再根据记录的滚动数来刷新数据，模拟滚动列表的效果
-function setScrollAnimation(){
+function setRankingAnimation(){
 	//永久滚动
     var foreverID = setInterval(function(){
         loopScroll();
@@ -579,11 +603,11 @@ function loopScroll(){
 	var totalDis = 70; //总共要滚动的距离
 	var onceDis = ( totalDis * loop ) / SCROLL_TIME; //通过比例获得每次需要增加的距离
 	var onceID = setInterval(function(){
-		curDis = parseInt(compatibility.getStyle(scroll, 'bottom'));
-		scroll.style.bottom = (curDis + onceDis) + 'px';
+		curDis = parseInt(compatibility.getStyle(hotRanking, 'bottom'));
+		hotRanking.style.bottom = (curDis + onceDis) + 'px';
 		if(curDis >= totalDis){
 			//修正坐标
-            scroll.style.bottom = '0px';
+            hotRanking.style.bottom = '0px';
             //刷新排行榜数据
             setScrollItem();
             //清除定时器
@@ -600,12 +624,9 @@ function addFloatEvent(){
 	compatibility.addEvent(floatLayer, 'mouseleave', function(event){
 		//鼠标移出隐藏浮层
 		compatibility.addClass(floatLayer, 'z-hidden');
-		//移除浮层后开启滚动
-		canScroll = true;
 	});
 
-	var wrap = null; //图片容器
-	var rect = null; //图片容器相对屏幕的位置
+	var imgWrap = null; //图片容器
 	//鼠标移入事件
 	compatibility.addEvent(courseList, 'mouseover', function(event){
 		event = event || window.event;
@@ -615,14 +636,12 @@ function addFloatEvent(){
 			//设置图层内容
 			setFloatLayer(event.target.getAttribute('dataset'));
 			//以图片的父节点 img-wrap 来确定位置
-			rect = event.target.parentNode.getBoundingClientRect();
+			imgWrap = event.target.parentNode;
 			//设置浮层坐标
-			floatLayer.style.top = rect.top - 11 + 'px';
-			floatLayer.style.left = rect.left - 11 + 'px';
+			floatLayer.style.top = imgWrap.offsetTop - 11 + 'px';
+			floatLayer.style.left = imgWrap.offsetLeft - 11 + 'px';
 			//显示浮层
 			compatibility.removeClass(floatLayer, 'z-hidden');
-			//因为浮层使用 position: fixed 来定位，如果移入浮层后滚动会导致浮层错位，所以关闭了滚动
-			canScroll = false;
 		}
 	});
 }
@@ -664,8 +683,6 @@ function addVideoEvent(){
 		compatibility.removeClass(videoLayer, 'z-hidden');
 		//自动播放视频
 		if(video) video.play();
-		//浮层弹出后不能滚动
-		canScroll = false;
 	});
 	//关闭视频层按钮
 	var btnClose = document.getElementById('btn-close-video');
@@ -676,37 +693,29 @@ function addVideoEvent(){
 			video.currentTime = 0;
 			video.pause();
 		}
-		//重新可以滚动
-		canScroll = true;
 	});
 }
 
-//鼠标键盘设备事件
-//为了防止浮层移动位置而设置的，具体操作起来用户体验很不好。。等后续修改
-function addEquipEvent(){
-	//鼠标中键事件
-	compatibility.addEvent(document, 'mousewheel', function(event){
-		event = event || window.event;
-		event.target = event.target || event.srcElement;
-		//阻止鼠标中键滚动
-		if(!canScroll) compatibility.stopDefault(event);
-	});
-	//鼠标中键事件，兼容 FireFox
-	compatibility.addEvent(document, 'wheel', function(event){
-		event = event || window.event;
-		event.target = event.target || event.srcElement;
-		//阻止鼠标中键滚动
-		if(!canScroll) compatibility.stopDefault(event);
-	});
+//浏览器事件
+function addBrowserEvent(){
+	//浏览器大小改变事件
+	compatibility.addEvent(window, 'resize', function(event){
+		if(document.body.clientWidth < SCREEN_LIMIT){
+			//浏览器处于宽屏状态，并缩小到窄屏
+			if(currentScreen !== NARROW_SCREEN){
+				currentScreen = NARROW_SCREEN;
+				//重新请求课程列表
 
-	//键盘按下事件
-	compatibility.addEvent(document, 'keydown', function(event){
-		event = event || window.event;
-		//阻止键盘上下滚动
-		if(event.keyCode === 38 || event.keyCode === 40){
-			if(!canScroll) compatibility.stopDefault(event);
+			}
+		}else{
+			//浏览器处于窄屏状态，并放大到宽屏
+			if(currentScreen !== WIDE_SCREEN){
+				currentScreen = WIDE_SCREEN;
+				//重新请求课程列表
+
+			}
 		}
-	})
+	});
 }
 
 //显示登录层

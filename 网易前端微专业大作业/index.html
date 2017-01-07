@@ -119,7 +119,7 @@
 						</div>
 						<!-- /课程列表 -->
 						<!-- 翻页器 -->
-						<div class="m-page">
+						<div id="page-turn" class="m-page">
 							<span id="page-left" class="arrow">&lt;</span>
 							<ol id="page-list"><li class="item z-sel">1</li><li class="item">2</li><li class="item">3</li><li class="item">4</li><li class="item">5</li></ol>
 							<span id="page-right" class="arrow">&gt;</span>
@@ -141,7 +141,7 @@
 					<div class="m-top">
 						<h2>最热排行</h2>
 						<div class="wrap">
-							<ul id="top-scroll" class="scroll"></ul>
+							<ul id="hot-ranking" class="ranking"></ul>
 						</div>
 					</div>
 					<!-- /课程排行榜 -->
@@ -152,10 +152,10 @@
 					<div class="title f-cb">
 						<img class="img" alt="课程图片" width="223px" height="124px">
 						<div class="wrap">
-							<h3 class="name"></h3>
-							<p><span class="icon"></span><span class="learner"></span></p>
-							<p class="provider"></p>
-							<p class="category"></p>
+							<h3 class="name f-toe"></h3>
+							<div><span class="icon"></span><span class="learner"></span></div>
+							<div class="provider"></div>
+							<div class="category"></div>
 						</div>
 					</div>
 					<div class="content"><p class="description"></p></div>
@@ -183,20 +183,26 @@
 				</div>
 				<dl class="link">
 					<dt>友情链接：</dt>
-					<dd><a href="http://open.163.com/" target="_blank">网易公开课</a></dd>
-					<dd><a href="http://study.163.com/" target="_blank">网易云课堂</a></dd>
-					<dd><a href="http://www.icourse163.org/" target="_blank">中国大学MOOC</a></dd>
+					<dd>
+						<div><a href="http://open.163.com/" target="_blank">网易公开课</a></div>
+						<div><a href="http://study.163.com/" target="_blank">网易云课堂</a></div>
+						<div><a href="http://www.icourse163.org/" target="_blank">中国大学MOOC</a></div>
+					</dd>
 				</dl>
 				<dl class="our">
 					<dt>我们：</dt>
-					<dd><a href="javascript:void(0);">关于</a></dd>
-					<dd><a href="javascript:void(0);">练习</a></dd>
-					<dd><a href="javascript:void(0);">关注</a><span class="icon"></span></dd>
+					<dd>
+						<div><a href="javascript:void(0);">关于</a></div>
+						<div><a href="javascript:void(0);">练习</a></div>
+						<div><a href="javascript:void(0);">关注</a><span class="icon"></span></div>
+					</dd>
 				</dl>
 				<dl class="more">
 					<dt>更多：</dt>
-					<dd><a href="javascript:void(0);">常见问题</a></dd>
-					<dd><a href="javascript:void(0);">意见反馈</a></dd>
+					<dd>
+						<div><a href="javascript:void(0);">常见问题</a></div>
+						<div><a href="javascript:void(0);">意见反馈</a></div>
+					</dd>
 				</dl>
 			</div>
 			<!-- /网页信息 -->
@@ -211,10 +217,10 @@
 			<div class="bg">
 				<h2>登录网易云课堂</h2>
 				<span id="btn-close-login" class="close"></span>
-				<form id="loginForm" method="get">
-					<p><input id="userName" class="name" type="text" name="userName" placeholder="账号"></p>
-					<p><input id="password" class="pwd" type="password" name="password" placeholder="密码"></p>
-					<p><button id="btn-login" class="btn" type="submit">登 录</button></p>
+				<form id="login-form" method="get">
+					<p><input class="name" type="text" name="userName" placeholder="账号"></p>
+					<p><input class="pwd" type="password" name="password" placeholder="密码"></p>
+					<p><button class="btn" type="submit">登 录</button></p>
 				</form>
 			</div>
 		</div>

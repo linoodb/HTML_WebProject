@@ -21,4 +21,7 @@ body{ background:#fff; }
 a,a:hover{ color:#333; }
 
 html,body { width: 100%; height: 100% }
+/* f-cb = clearBoth */
 .f-cb:after { content: "."; display: block; clear: both; height: 0; overflow: hidden; visibility: hidden; }
+/* toe = textOverflowEllipsis */
+.f-toe { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
