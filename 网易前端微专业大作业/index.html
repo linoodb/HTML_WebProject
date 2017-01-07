@@ -120,9 +120,9 @@
 						<!-- /课程列表 -->
 						<!-- 翻页器 -->
 						<div id="page-turn" class="m-page">
-							<span id="page-left" class="arrow">&lt;</span>
-							<ol id="page-list"><li class="item z-sel">1</li><li class="item">2</li><li class="item">3</li><li class="item">4</li><li class="item">5</li></ol>
-							<span id="page-right" class="arrow">&gt;</span>
+							<span class="arrow j-leftArrow">&lt;</span>
+							<ol></ol>
+							<span class="arrow j-rightArrow">&gt;</span>
 						</div>
 						<!-- /翻页器 -->
 					</div>
@@ -214,7 +214,7 @@
 	<!-- 登录层 -->
 	<div id="popup-login" class="m-log z-hidden">
 		<div class="wrap">
-			<div class="bg">
+			<div class="mask">
 				<h2>登录网易云课堂</h2>
 				<span id="btn-close-login" class="close"></span>
 				<form id="login-form" method="get">
@@ -230,7 +230,7 @@
 	<!-- 视频层 -->
 	<div id="popup-video" class="m-vd z-hidden">
 		<div class="wrap">
-			<div class="bg">
+			<div class="mask">
 				<h2>请观看下面的视频</h2>
 				<span id="btn-close-video" class="close"></span>
 				<video width="889px" height="567px" controls>

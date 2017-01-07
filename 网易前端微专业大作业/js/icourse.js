@@ -5,7 +5,7 @@ var SCREEN_LIMIT = 1205; //窗口宽度<1205 时，使用小屏视觉布局；�
 var WIDE_SCREEN = 'WIDE_SCREEN'; //宽屏
 var NARROW_SCREEN = 'NARROW_SCREEN'; //窄屏
 /*
-*	Cookie 有效期（永久）
+*	Cookie 有效期（暂时设置为永久）
 */
 var COOKIE_EXPIRES = 'Fri, 31 Dec 9999 23:59:59 GMT';
 /*
@@ -36,29 +36,28 @@ var timeID = null; //时间计时器 ID
 var animationID = null; //动画时间计时器 ID
 var delayID = null; //延迟计时器 ID
 /*
-*	选项卡
-*/
-var designTab = null; //产品设计选项卡
-var programTab = null; //编程语言选项卡
-/*
 *	热门排行榜
 */
 var TOTAL_SCROLL = 11; //排行榜列表项的数量
 var DELAY_TIME = 5000; //排行榜等待滚动的时长
 var SCROLL_TIME = 500; //滚动一次的时长（可自由设置）
 var hotRanking = null; //热门排行榜
-var scrollData = null; //排行榜数据
+var rankingData = null; //排行榜数据
 var scrollCount = 0; //记录排行榜滚动的次数
+/*
+*	选项卡
+*/
+var mainTab = null; //主栏选项卡
 /*
 * 课程列表
 */
-var TOTAL_COURSES = 20; //列表项总数
-var NARROW_SCREEN_COURSES = 15; //宽屏可显示的课程数
-var WIDE_SCREEN_COURSES = 20; //窄屏可显示的课程数
+var WIDE_SCREEN_COURSES = 20; //宽屏可显示的课程数
+var NARROW_SCREEN_COURSES = 15; //窄屏可显示的课程数
 var COURSE_DESIGN = 10; //产品设计（后端参数）
 var COURSE_PROGRAM = 20; //编程语言（后端参数）
-var currentScreen = ''; //当前屏幕属于宽屏还是窄屏
-var currentCourses = 0; //当前的课程数量
+var curScreen = ''; //当前屏幕属于宽屏还是窄屏
+var curCourses = 0; //当前的课程数量
+var curType = ''; //当前的课程类型
 var courseList = null; //课程列表
 var courseData = null; //课程数据
 /*
@@ -68,8 +67,11 @@ var floatLayer = null; //课程浮层
 /*
 *	翻页器
 */
-var curPage = 1; //当前页数
+var curPage = 0; //当前页数
 var pageTurn = null; //翻页器
+var pageList = null; //翻页器列表（不包含左右箭头）
+var leftArrow = null; //左箭头
+var rightArrow = null; //右箭头
 /*
 *	登录框
 */
@@ -97,9 +99,9 @@ function initUI(){
 	initLogin();
 	initFollow();
 	initSlide();
-	initHotRanking();
 	initCourse();
 	initPage();
+	initHotRanking();
 }
 
 //添加事件
@@ -110,6 +112,7 @@ function addEvent(){
 	addSlideEvent();
 	addTabEvent();
 	addFloatEvent();
+	addPageEvent();
 	addVideoEvent();
 	addBrowserEvent();
 }
@@ -161,24 +164,6 @@ function initSlide(){
 	createSlideSelector();
 }
 
-//初始化最热排行榜
-function initHotRanking(){
-	hotRanking = document.getElementById('hot-ranking');
-	//本地测试debug使用
-	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
-	// scrollData = JSON.parse(TOP_DATA);
-
-	//通过 AJAX 请求服务端数据，只请求一次
-	compatibility.requestServer('GET', TOP_URL, null, null, function(data){
-		//转化为 JS 对象
-		scrollData = JSON.parse(data);
-		//创建排行榜列表项
-		createScrollItem();
-		//填充排行榜
-		setScrollItem();
-	});
-}
-
 //初始化课程列表
 function initCourse(){
 	courseList = document.getElementById('coures-list');
@@ -186,44 +171,35 @@ function initCourse(){
 	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
 	// courseData = JSON.parse(COURSES_DATA);
 
-	//创建课程列表项
-	createCourseItem();
-
-	//默认请求第一页的产品设计，数量根据屏幕宽度来定
-	TOTAL_COURSES = document.body.clientWidth < SCREEN_LIMIT ? NARROW_SCREEN_COURSES : WIDE_SCREEN_COURSES;
-	var param = { pageNo: 1, psize: TOTAL_COURSES, type: COURSE_DESIGN };
-	requestCourse(param);
+	//默认请求第一页的产品设计，课程数量根据屏幕宽度来定
+	curPage = 1;
+	curType = COURSE_DESIGN;
+	requestCourse(getCourseParam());
 }
 
 //初始化翻页器
 function initPage(){
 	pageTurn = document.getElementById('page-turn');
+	pageList = pageTurn.querySelector('ol');
+	leftArrow = compatibility.getElementsByClassName(pageTurn, 'j-leftArrow')[0];
+	rightArrow = compatibility.getElementsByClassName(pageTurn, 'j-rightArrow')[0];
 }
 
-//本地测试debug
-// var mParam = { pageNo: 1, psize: TOTAL_COURSES, type: COURSE_DESIGN };
-// var mUrl = COURSES_URL + compatibility.serialize(mParam);
-// compatibility.requestServer('GET', mUrl, null, null, function(data){
-// 	var mCourseData = JSON.parse(data);
-// 	console.log(mCourseData);
-// });
+//初始化最热排行榜
+function initHotRanking(){
+	hotRanking = document.getElementById('hot-ranking');
+	//本地测试debug使用
+	//模拟从服务器接收到 JSON 信息，信息保存在 mock.js 里
+	// rankingData = JSON.parse(MOCK_RANKING_DATA);
 
-//向服务器请求课程列表
-//传入的参数 { pageNo: 1, psize: 20, type: 10 }
-//pageNo: 当前页码
-//psize: 每页返回数据个数
-//type: 筛选类型（10：产品设计；20：编程语言）
-function requestCourse(param){
-	//拼接请求的参数
-	var targetURL = COURSES_URL + compatibility.serialize(param);
-	//通过 AJAX 请求服务端数据
-	compatibility.requestServer('GET', targetURL, null, null, function(data){
+	//通过 AJAX 请求服务端数据，只请求一次
+	compatibility.requestServer('GET', TOP_URL, null, null, function(data){
 		//转化为 JS 对象
-		courseData = JSON.parse(data);
-		//填充课程列表项
-		setCourseItem();
-		//设置翻页器
-		setPageTurn();
+		rankingData = JSON.parse(data);
+		//创建排行榜列表项
+		createRankingItem();
+		//设置排行榜列表项
+		setRankingItem();
 	});
 }
 
@@ -243,70 +219,40 @@ function createSlideSelector(){
 	}
 }
 
-//创建排行榜列表项
-function createScrollItem(){
-	//列表单项
-	var li_tag = null;
-	//排行榜显示的图片为10，创建11个列表项就足够了，后续根据取余来更新数据
-	for(var i = 0; i < TOTAL_SCROLL; i ++){
-		li_tag = document.createElement('li');
-		//使用模板构建
-		li_tag.innerHTML = TEMPLATE_M_TOP;
-		//添加类名
-		compatibility.addClass(li_tag, 'item');
-		compatibility.addClass(li_tag, 'f-cb');
-		//添加到父节点
-		hotRanking.appendChild(li_tag);
-	}
-}
-
-//设置排行榜列表项
-function setScrollItem(){
-	var li_tag = null; //列表项
-	var a_tag = null; //链接
-	var img_tag = null; //课程图片
-	var name_tag = null; //课程名称
-	var learner_tag = null; //在学人数
-	var index = null; //索引
-	var length = scrollData.length; //数据总长度
-	for(var i = 0; i < TOTAL_SCROLL; i ++){
-		//通过取余来确定索引的位置
-		index = (i + scrollCount) % length;
-		//获取列表项
-		li_tag = compatibility.getElementsByClassName(hotRanking, 'item')[i];
-		//链接地址（暂时跳转到当前课程大图）
-		a_tag = li_tag.querySelector('a');
-		a_tag.href = scrollData[index].bigPhotoUrl;
-		a_tag.title = scrollData[index].name;
-		//课程图片
-		img_tag = compatibility.getElementsByClassName(li_tag, 'img')[0];
-		img_tag.style.background = 'url(' + scrollData[index].smallPhotoUrl + ') 0 0 no-repeat';
-		//课程名称
-		name_tag = compatibility.getElementsByClassName(li_tag, 'name')[0];
-		name_tag.innerHTML = scrollData[index].name;
-		//在学人数
-		learner_tag = compatibility.getElementsByClassName(li_tag, 'learner')[0];
-		learner_tag.innerHTML = scrollData[index].learnerCount;
-	}
-}
-
-//设置翻页器
-function setPageTurn(){
-	//先获取总课程数量
-	var totalCourse = courseData.totalCount;
-	//根据总课程数和宽窄屏来设置翻页器的数量
-	// var totalPage = parseInt(totalCourse / currentScreen)
-	var totalPage = courseData.totalPage;
-	console.log(totalPage)
-
+//向服务器请求课程列表
+//传入的参数 { pageNo: 1, psize: 20, type: 10 }
+//pageNo: 当前页码
+//psize: 每页返回数据个数
+//type: 筛选类型（10：产品设计；20：编程语言）
+function requestCourse(param){
+	//拼接请求的参数
+	var targetURL = COURSES_URL + compatibility.serialize(param);
+	//通过 AJAX 请求服务端数据
+	compatibility.requestServer('GET', targetURL, null, null, function(data){
+		//清除之前所有的课程列表和翻页器
+		courseList.innerHTML = '';
+		pageList.innerHTML = ''
+		//转化为 JS 对象
+		courseData = JSON.parse(data);
+		//最后一页的课程可能不满足宽屏的20个或者窄屏的15个，根据服务端返回的课程数来设置当前课程数
+		curCourses = courseData.list.length;
+		//创建课程列表项
+		createCourseItem();
+		//设置课程列表项
+		setCourseItem();
+		//创建翻页器
+		createPageTurn();
+		//设置翻页器箭头
+		setPageArrow();
+	});
 }
 
 //创建课程列表项
 function createCourseItem(){
 	//列表单项
 	var li_tag = null;
-	//总共创建20个课程项，根据服务端返回的课程数量来显示
-	for(var i = 0; i < TOTAL_COURSES; i ++){
+	//根据服务端返回的课程数量来创建
+	for(var i = 0; i < curCourses; i ++){
 		li_tag = document.createElement('li');
 		//使用模板构建
 		li_tag.innerHTML = TEMPLATE_M_LIST;
@@ -324,7 +270,7 @@ function setCourseItem(){
 	var provider_tag = null; //机构发布者
 	var learner_tag = null; //在学人数
 	var price_tag = null; //课程价格
-	for(var i = 0; i < TOTAL_COURSES; i ++){
+	for(var i = 0; i < curCourses; i ++){
 		//获取列表项
 		li_tag = courseList.getElementsByTagName('li')[i];
 		//链接地址（暂时跳转到当前课程中图）
@@ -352,6 +298,95 @@ function setCourseItem(){
 	}
 }
 
+//创建翻页器
+function createPageTurn(){
+	var pages = courseData.totalPage; //总页数
+	var li_tag = null; //翻页器单项
+	//页序号从1开始计算
+	for(var i = 1; i <= pages; i ++){
+		li_tag = document.createElement('li');
+		//添加样式
+		compatibility.addClass(li_tag, 'item');
+		//选中的样式
+		if(i === curPage) compatibility.addClass(li_tag, 'z-sel');
+		//添加页序号
+		li_tag.innerHTML = i.toString();
+		//保存索引用于后续点击页序号事件
+		li_tag.setAttribute('dataset', i.toString());
+		pageList.appendChild(li_tag);
+	}
+}
+
+//设置翻页器箭头的样式
+function setPageArrow(){
+	if(curPage === 1){
+		//当前为第一页时，左箭头不能点击
+		compatibility.addClass(leftArrow, 'z-dis');
+		compatibility.removeClass(rightArrow, 'z-dis');
+		leftArrowEnabled = false;
+		rightArrowEnabled = true;
+	}else if(curPage === courseData.totalPage){
+		//当前为最后一页时，右箭头不能点击
+		compatibility.addClass(rightArrow, 'z-dis');
+		compatibility.removeClass(leftArrow, 'z-dis');
+		rightArrowEnabled = false;
+		leftArrowEnabled = true;
+	}else{
+		//当前为其它页，左右箭头都可以点击
+		compatibility.removeClass(leftArrow, 'z-dis');
+		compatibility.removeClass(rightArrow, 'z-dis');
+		leftArrowEnabled = true;
+		rightArrowEnabled = true;
+	}
+}
+
+//创建排行榜列表项
+function createRankingItem(){
+	//列表单项
+	var li_tag = null;
+	//排行榜显示的图片为10，创建11个列表项就足够了，后续根据取余来更新数据
+	for(var i = 0; i < TOTAL_SCROLL; i ++){
+		li_tag = document.createElement('li');
+		//使用模板构建
+		li_tag.innerHTML = TEMPLATE_M_TOP;
+		//添加类名
+		compatibility.addClass(li_tag, 'item');
+		compatibility.addClass(li_tag, 'f-cb');
+		//添加到父节点
+		hotRanking.appendChild(li_tag);
+	}
+}
+
+//设置排行榜列表项
+function setRankingItem(){
+	var li_tag = null; //列表项
+	var a_tag = null; //链接
+	var img_tag = null; //课程图片
+	var name_tag = null; //课程名称
+	var learner_tag = null; //在学人数
+	var index = null; //索引
+	var length = rankingData.length; //数据总长度
+	for(var i = 0; i < TOTAL_SCROLL; i ++){
+		//通过取余来确定索引的位置
+		index = (i + scrollCount) % length;
+		//获取列表项
+		li_tag = compatibility.getElementsByClassName(hotRanking, 'item')[i];
+		//链接地址（暂时跳转到当前课程大图）
+		a_tag = li_tag.querySelector('a');
+		a_tag.href = rankingData[index].bigPhotoUrl;
+		a_tag.title = rankingData[index].name;
+		//课程图片
+		img_tag = compatibility.getElementsByClassName(li_tag, 'img')[0];
+		img_tag.style.background = 'url(' + rankingData[index].smallPhotoUrl + ') 0 0 no-repeat';
+		//课程名称
+		name_tag = compatibility.getElementsByClassName(li_tag, 'name')[0];
+		name_tag.innerHTML = rankingData[index].name;
+		//在学人数
+		learner_tag = compatibility.getElementsByClassName(li_tag, 'learner')[0];
+		learner_tag.innerHTML = rankingData[index].learnerCount;
+	}
+}
+
 // 顶部通知栏事件
 function addNotifyEvent(){
 	var btnClose = compatibility.getElementsByClassName(headNotify, 'close')[0];
@@ -361,7 +396,7 @@ function addNotifyEvent(){
 	});
 	compatibility.addEvent(btnCloseFv, 'click', function(event){
 		compatibility.addClass(headNotify, 'z-hidden');
-		//设置 Cookies ，以后登录顶部通知条不会再出现
+		//设置 Cookies ，顶部通知条不会再出现
 		compatibility.setCookie('showNotify', 'false', new Date(COOKIE_EXPIRES));
 	});
 }
@@ -371,21 +406,25 @@ function addLoginEvent(){
 	//关闭登录层按钮
 	var btnClose = document.getElementById('btn-close-login');
 	compatibility.addEvent(btnClose, 'click', function(event){
-		hideLoginLayer();
+		compatibility.addClass(loginLayer, 'z-hidden');
 	});
 	//提交表单事件
 	compatibility.addEvent(loginForm, 'submit', function(event){
 		//阻止默认表单提交事件，改由 Ajax 提交
 		compatibility.stopDefault(event);
 		//表单验证，账号密码不能为空
-		if(inputName.value === '' || inputPwd.value === ''){
-			alert('账号或密码不能为空');
+		if(inputName.value === ''){
+			alert('账号不能为空');
+			return;
+		}
+		if(inputPwd.value === ''){
+			alert('密码不能为空');
 			return;
 		}
 		//使用 MD5 加密账号和密码
-		var obj = { userName: md5(inputName.value), password: md5(inputPwd.value) };
+		var secret = { userName: md5(inputName.value), password: md5(inputPwd.value) };
 		//拼接链接
-		var url = LOGIN_URL + compatibility.serialize(obj);
+		var url = LOGIN_URL + compatibility.serialize(secret);
 		//调用服务器 Ajax 登录
 		compatibility.requestServer('GET', url, 'application/x-www-form-urlencoded', null, function(data){
 			switch (JSON.parse(data)){
@@ -394,7 +433,7 @@ function addLoginEvent(){
 					//设置登录 Cookie
 					compatibility.setCookie('loginSuc', 'true', new Date(COOKIE_EXPIRES));
 					//隐藏登录层
-					hideLoginLayer();
+					compatibility.addClass(loginLayer, 'z-hidden');
 					break;
 				case 0: //登录失败
 					alert('登录失败，账号或密码错误');
@@ -410,8 +449,8 @@ function addFollowEvent(){
 		//先根据 Cookies 判断是否登录，如果没有登录则弹出登录框
 		var cookie = compatibility.getCookie();
 		if(!cookie.loginSuc){
-			//从来没有登录过的，弹出登录层
-			showLoginLayer();
+			//从来没有登录过的，显示登录层
+			compatibility.removeClass(loginLayer, 'z-hidden');
 		}else{
 			//已经登录成功，但是还没关注或者取消关注的
 			if(!cookie.followSuc || cookie.followSuc === 'false'){
@@ -455,7 +494,6 @@ function addSlideEvent(){
 	compatibility.addEvent(slideSelector, 'click', function(event){
 		event = event || window.event;
 		event.target = event.target || event.srcElement;
-
 		//是否点击在选择器上（有可能点击到ul上造成无法获得索引值）
 		if(!compatibility.hasClass(event.target, 'selector')){
 			//获取点击选择器的索引
@@ -474,6 +512,184 @@ function addSlideEvent(){
 			}
 		}
 	});
+}
+
+//选项卡事件
+function addTabEvent(){
+	mainTab = document.getElementById('main-tab');
+	var designTab = compatibility.getElementsByClassName(mainTab, 'design')[0];
+	var programTab = compatibility.getElementsByClassName(mainTab, 'program')[0];
+	compatibility.addEvent(mainTab, 'click', function(event){
+		event = event || window.event;
+		event.target = event.target || event.srcElement;
+		if(!compatibility.hasClass(event.target, 'z-sel')){
+			if(compatibility.hasClass(event.target, 'design')){
+				compatibility.removeClass(programTab, 'z-sel');
+				compatibility.addClass(designTab, 'z-sel');
+				curType = COURSE_DESIGN;
+			}else if(compatibility.hasClass(event.target, 'program')){
+				compatibility.removeClass(designTab, 'z-sel');
+				compatibility.addClass(programTab, 'z-sel');
+				curType = COURSE_PROGRAM;
+			}
+			//切换选项卡回到第一页
+			curPage = 1;
+			requestCourse(getCourseParam());
+		}
+	});
+}
+
+//浮层事件
+function addFloatEvent(){
+	floatLayer = document.getElementById('float-layer');
+
+	//鼠标移出事件
+	compatibility.addEvent(floatLayer, 'mouseleave', function(event){
+		//鼠标移出隐藏浮层
+		compatibility.addClass(floatLayer, 'z-hidden');
+	});
+
+	var imgWrap = null; //图片容器
+	//鼠标移入事件
+	compatibility.addEvent(courseList, 'mouseover', function(event){
+		event = event || window.event;
+		event.target = event.target || event.srcElement;
+		//移入图片显示浮层
+		if(compatibility.hasClass(event.target, 'img')){
+			//设置图层内容
+			setFloatLayer(event.target.getAttribute('dataset'));
+			//以图片的父节点 img-wrap 来确定位置
+			imgWrap = event.target.parentNode;
+			//设置浮层坐标
+			floatLayer.style.top = imgWrap.offsetTop - 11 + 'px';
+			floatLayer.style.left = imgWrap.offsetLeft - 11 + 'px';
+			//显示浮层
+			compatibility.removeClass(floatLayer, 'z-hidden');
+		}
+	});
+}
+
+//翻页器事件
+function addPageEvent(){
+	//左箭头事件
+	compatibility.addEvent(leftArrow, 'click', function(event){
+		if(leftArrowEnabled){
+			//页数减一
+			--curPage;
+			requestCourse(getCourseParam());
+			//跳转到选项卡附近
+			scrollToTab();
+		}
+	});
+	//右箭头事件
+	compatibility.addEvent(rightArrow, 'click', function(event){
+		if(rightArrowEnabled){
+			//页数加一
+			++curPage;
+			requestCourse(getCourseParam());
+			//跳转到选项卡附近
+			scrollToTab();
+		};
+	});
+	var clickPage = 0; //点击的页序号
+	//页序号事件
+	compatibility.addEvent(pageList, 'click', function(event){
+		event = event || window.event;
+		event.target = event.target || event.srcElement;
+		//点击在页序号上
+		if(compatibility.hasClass(event.target, 'item')){
+			//获取点击的页序号
+			clickPage = parseInt(event.target.getAttribute('dataset'));
+			//如果点击在当前页，则无效
+			if(clickPage !== curPage){
+				//跳转到某一页
+				curPage = clickPage;
+				requestCourse(getCourseParam());
+				//跳转到选项卡附近
+				scrollToTab();
+			}
+		}
+	});
+}
+
+//视频事件
+function addVideoEvent(){
+	//视频层
+	var videoLayer = document.getElementById('popup-video');
+	//视频
+	var video = videoLayer.querySelector('video');
+	//播放视频按钮
+	var btnPlay = document.getElementById('btn-play-video');
+	compatibility.addEvent(btnPlay, 'click', function(event){
+		compatibility.removeClass(videoLayer, 'z-hidden');
+		//自动播放视频
+		if(video) video.play();
+	});
+	//关闭视频层按钮
+	var btnClose = document.getElementById('btn-close-video');
+	compatibility.addEvent(btnClose, 'click', function(event){
+		compatibility.addClass(videoLayer, 'z-hidden');
+		//关闭视频后暂停播放，并重置视频进度
+		if(video){
+			video.currentTime = 0;
+			video.pause();
+		}
+	});
+}
+
+//浏览器事件
+function addBrowserEvent(){
+	//浏览器大小改变事件
+	compatibility.addEvent(window, 'resize', function(event){
+		if(document.body.clientWidth < SCREEN_LIMIT){
+			//浏览器处于宽屏状态，并缩小到窄屏
+			if(curScreen !== NARROW_SCREEN){
+				curScreen = NARROW_SCREEN;
+				//宽窄屏切换时，页码重置为第一页
+				curPage = 1;
+				//重新请求课程列表
+				requestCourse(getCourseParam());
+				//跳转到选项卡附近
+				scrollToTab();
+			}
+		}else{
+			//浏览器处于窄屏状态，并放大到宽屏
+			if(curScreen !== WIDE_SCREEN){
+				curScreen = WIDE_SCREEN;
+				//宽窄屏切换时，页码重置为第一页
+				curPage = 1;
+				//重新请求课程列表
+				requestCourse(getCourseParam());
+				//跳转到选项卡附近
+				scrollToTab();
+			}
+		}
+	});
+}
+
+//设置图层内容
+function setFloatLayer(index){
+	//课程图片
+	var img_tag = compatibility.getElementsByClassName(floatLayer, 'img')[0];
+	img_tag.src = courseData.list[index].middlePhotoUrl;
+	//课程名称
+	var name_tag = compatibility.getElementsByClassName(floatLayer, 'name')[0];
+	name_tag.title = courseData.list[index].name;
+	name_tag.innerHTML = courseData.list[index].name;
+	//在学人数
+	var learner_tag = compatibility.getElementsByClassName(floatLayer, 'learner')[0];
+	learner_tag.innerHTML = courseData.list[index].learnerCount + '人在学';
+	//机构发布者
+	var provider_tag = compatibility.getElementsByClassName(floatLayer, 'provider')[0];
+	provider_tag.innerHTML = '发布者：' + courseData.list[index].provider;
+	//分类
+	var category_tag = compatibility.getElementsByClassName(floatLayer, 'category')[0];
+	//分类categoryName的数据服务端返回null？？？，可能会暂时使用targetUser
+	// category_tag.innerHTML = '分类：' + courseData.list[index].targetUser;
+	category_tag.innerHTML = courseData.list[index].categoryName ? ('分类：' + courseData.list[index].categoryName) : '分类：无';
+	//描述
+	var des_tag = compatibility.getElementsByClassName(floatLayer, 'description')[0];
+	des_tag.innerHTML = courseData.list[index].description;
 }
 
 //轮播图动画
@@ -554,35 +770,6 @@ function playSlideAnimation(){
 	}, loop);
 }
 
-//选项卡事件
-function addTabEvent(){
-	var tab = document.getElementById('main-tab');
-	designTab = compatibility.getElementsByClassName(tab, 'design')[0];
-	programTab = compatibility.getElementsByClassName(tab, 'program')[0];
-	compatibility.addEvent(tab, 'click', function(event){
-		event = event || window.event;
-		event.target = event.target || event.srcElement;
-		var curType = null; //当前点击的选项卡对应请求的服务端参数
-		if(!compatibility.hasClass(event.target, 'z-sel')){
-			if(compatibility.hasClass(event.target, 'design')){
-				compatibility.removeClass(programTab, 'z-sel');
-				compatibility.addClass(designTab, 'z-sel');
-				curType = COURSE_DESIGN;
-			}else if(compatibility.hasClass(event.target, 'program')){
-				compatibility.removeClass(designTab, 'z-sel');
-				compatibility.addClass(programTab, 'z-sel');
-				curType = COURSE_PROGRAM;
-			}
-			//请求服务端数据
-			//根据当前页数决定请求的页数
-			//每次请求20门课程，宽屏可以完全显示20门，窄屏情况下只能显示15门，
-			//根据点击的选项卡决定请求的课程类型
-			var param = { pageNo: curPage, psize: TOTAL_COURSES, type: curType };
-			requestCourse(param);
-		}
-	});
-}
-
 //排行榜动画
 //每次移动一个列表项高度然后重置列表到移动前的位置，再根据记录的滚动数来刷新数据，模拟滚动列表的效果
 function setRankingAnimation(){
@@ -609,127 +796,25 @@ function loopScroll(){
 			//修正坐标
             hotRanking.style.bottom = '0px';
             //刷新排行榜数据
-            setScrollItem();
+            setRankingItem();
             //清除定时器
             clearInterval(onceID);
 		}
 	}, loop);
 }
 
-//浮层事件
-function addFloatEvent(){
-	floatLayer = document.getElementById('float-layer');
-
-	//鼠标移出事件
-	compatibility.addEvent(floatLayer, 'mouseleave', function(event){
-		//鼠标移出隐藏浮层
-		compatibility.addClass(floatLayer, 'z-hidden');
-	});
-
-	var imgWrap = null; //图片容器
-	//鼠标移入事件
-	compatibility.addEvent(courseList, 'mouseover', function(event){
-		event = event || window.event;
-		event.target = event.target || event.srcElement;
-		//移入图片显示浮层
-		if(compatibility.hasClass(event.target, 'img')){
-			//设置图层内容
-			setFloatLayer(event.target.getAttribute('dataset'));
-			//以图片的父节点 img-wrap 来确定位置
-			imgWrap = event.target.parentNode;
-			//设置浮层坐标
-			floatLayer.style.top = imgWrap.offsetTop - 11 + 'px';
-			floatLayer.style.left = imgWrap.offsetLeft - 11 + 'px';
-			//显示浮层
-			compatibility.removeClass(floatLayer, 'z-hidden');
-		}
-	});
+//获取课程参数
+function getCourseParam(){
+	return {
+		pageNo: curPage,
+		psize: document.body.clientWidth < SCREEN_LIMIT ? NARROW_SCREEN_COURSES : WIDE_SCREEN_COURSES,
+		type: curType
+	}
 }
 
-//设置图层内容
-function setFloatLayer(index){
-	//课程图片
-	var img_tag = compatibility.getElementsByClassName(floatLayer, 'img')[0];
-	img_tag.src = courseData.list[index].middlePhotoUrl;
-	//课程名称
-	var name_tag = compatibility.getElementsByClassName(floatLayer, 'name')[0];
-	name_tag.title = courseData.list[index].name;
-	name_tag.innerHTML = courseData.list[index].name;
-	//在学人数
-	var learner_tag = compatibility.getElementsByClassName(floatLayer, 'learner')[0];
-	learner_tag.innerHTML = courseData.list[index].learnerCount + '人在学';
-	//机构发布者
-	var provider_tag = compatibility.getElementsByClassName(floatLayer, 'provider')[0];
-	provider_tag.innerHTML = '发布者：' + courseData.list[index].provider;
-	//分类
-	var category_tag = compatibility.getElementsByClassName(floatLayer, 'category')[0];
-	//分类categoryName的数据服务端返回null？？？，可能会暂时使用targetUser
-	// category_tag.innerHTML = '分类：' + courseData.list[index].targetUser;
-	category_tag.innerHTML = courseData.list[index].categoryName ? ('分类：' + courseData.list[index].categoryName) : '分类：无';
-	//描述
-	var des_tag = compatibility.getElementsByClassName(floatLayer, 'description')[0];
-	des_tag.innerHTML = courseData.list[index].description;
-}
-
-//视频事件
-function addVideoEvent(){
-	//视频层
-	var videoLayer = document.getElementById('popup-video');
-	//视频
-	var video = videoLayer.querySelector('video');
-	//播放视频按钮
-	var btnPlay = document.getElementById('btn-play-video');
-	compatibility.addEvent(btnPlay, 'click', function(event){
-		compatibility.removeClass(videoLayer, 'z-hidden');
-		//自动播放视频
-		if(video) video.play();
-	});
-	//关闭视频层按钮
-	var btnClose = document.getElementById('btn-close-video');
-	compatibility.addEvent(btnClose, 'click', function(event){
-		compatibility.addClass(videoLayer, 'z-hidden');
-		//关闭视频后暂停播放，并重置视频进度
-		if(video){
-			video.currentTime = 0;
-			video.pause();
-		}
-	});
-}
-
-//浏览器事件
-function addBrowserEvent(){
-	//浏览器大小改变事件
-	compatibility.addEvent(window, 'resize', function(event){
-		if(document.body.clientWidth < SCREEN_LIMIT){
-			//浏览器处于宽屏状态，并缩小到窄屏
-			if(currentScreen !== NARROW_SCREEN){
-				currentScreen = NARROW_SCREEN;
-				//重新请求课程列表
-
-			}
-		}else{
-			//浏览器处于窄屏状态，并放大到宽屏
-			if(currentScreen !== WIDE_SCREEN){
-				currentScreen = WIDE_SCREEN;
-				//重新请求课程列表
-
-			}
-		}
-	});
-}
-
-//显示登录层
-function showLoginLayer(){
-	compatibility.removeClass(loginLayer, 'z-hidden');
-	//浮层弹出后不能滚动
-	canScroll = false;
-}
-
-//隐藏登录层
-function hideLoginLayer(){
-	compatibility.addClass(loginLayer, 'z-hidden');
-	//重新可以滚动
-	canScroll = true;
+//滚动到选项卡
+function scrollToTab(){
+	window.scrollTo(mainTab.offsetLeft, mainTab.offsetTop);
 }
 
 //本地测试debug使用，清除所有 Cookie

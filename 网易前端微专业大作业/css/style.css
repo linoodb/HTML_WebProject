@@ -235,7 +235,7 @@
 }
 /* 主内容区域 */
 .g-main {
-	width: 100%;
+	width: 80%;
 	min-width: 961px; max-width: 1206px;
 	margin: 0 auto;
 }
@@ -265,9 +265,6 @@
 	cursor: pointer;
 }
 /* 课程列表 */
-.m-list {
-	height: 1230px;
-}
 .m-list>ul {
 	margin-left: -20px;
 	font-size: 0;
@@ -419,6 +416,7 @@
 /* 课程排行榜 */
 .m-top {
 	position: relative;
+	margin-bottom: 60px;
 	width: 223px;
 	background-color: #fff;
 	box-shadow: 1px 0 0 0 #ecebeb, 0 1px 1px 0 #d4d3d3, -1px 0 0 0 #ecebeb;
@@ -608,7 +606,7 @@
 	vertical-align: middle;
 	text-align: center;
 }
-.m-log .bg, .m-vd .bg {
+.m-log .mask, .m-vd .mask {
 	position: relative;
 	display: inline-block;
 	background-color: #fff;
@@ -624,7 +622,7 @@
 	background: url('../res/sprite.png') -600px -71px no-repeat;
 	cursor: pointer;
 }
-.m-log .bg {
+.m-log .mask {
 	width: 387px; height: 288px;
 }
 .m-log h2 {
@@ -653,7 +651,7 @@
 	top: 10px; right: 10px;
 }
 /* 视频层 */
-.m-vd .bg {
+.m-vd .mask {
 	width: 950px; height: 676px;
 }
 .m-vd h2 {

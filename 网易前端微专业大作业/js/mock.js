@@ -82,7 +82,7 @@ MOCK_COURSES_DATA = '{\
 *	categoryName = 课程分类
 *	description = 课程描述
 */
-MOCK_TOP_DATA = '[{\
+MOCK_RANKING_DATA = '[{\
 	"id":"967019",\
 	"name":"和秋叶一起学职场技能",\
 	"bigPhotoUrl":"http://img1.ph.126.net/eg62.png",\

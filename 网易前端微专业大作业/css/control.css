@@ -37,3 +37,7 @@
 .m-page .z-sel {
 	color: #39a030;
 }
+/* 翻页器（禁用状态） */
+.m-page>.z-dis {
+	cursor: not-allowed;
+}
