@@ -516,12 +516,16 @@ function addSlideEvent(){
 
 //选项卡事件
 function addTabEvent(){
+	//选项卡
 	mainTab = document.getElementById('main-tab');
+	//产品设计
 	var designTab = compatibility.getElementsByClassName(mainTab, 'design')[0];
+	//编程语言
 	var programTab = compatibility.getElementsByClassName(mainTab, 'program')[0];
 	compatibility.addEvent(mainTab, 'click', function(event){
 		event = event || window.event;
 		event.target = event.target || event.srcElement;
+		//点击已选中的选项卡，则无效
 		if(!compatibility.hasClass(event.target, 'z-sel')){
 			if(compatibility.hasClass(event.target, 'design')){
 				compatibility.removeClass(programTab, 'z-sel');
@@ -577,7 +581,7 @@ function addPageEvent(){
 			//页数减一
 			--curPage;
 			requestCourse(getCourseParam());
-			//跳转到选项卡附近
+			//跳转到选项卡
 			scrollToTab();
 		}
 	});
@@ -587,7 +591,7 @@ function addPageEvent(){
 			//页数加一
 			++curPage;
 			requestCourse(getCourseParam());
-			//跳转到选项卡附近
+			//跳转到选项卡
 			scrollToTab();
 		};
 	});
@@ -605,7 +609,7 @@ function addPageEvent(){
 				//跳转到某一页
 				curPage = clickPage;
 				requestCourse(getCourseParam());
-				//跳转到选项卡附近
+				//跳转到选项卡
 				scrollToTab();
 			}
 		}
@@ -649,7 +653,7 @@ function addBrowserEvent(){
 				curPage = 1;
 				//重新请求课程列表
 				requestCourse(getCourseParam());
-				//跳转到选项卡附近
+				//跳转到选项卡
 				scrollToTab();
 			}
 		}else{
@@ -660,7 +664,7 @@ function addBrowserEvent(){
 				curPage = 1;
 				//重新请求课程列表
 				requestCourse(getCourseParam());
-				//跳转到选项卡附近
+				//跳转到选项卡
 				scrollToTab();
 			}
 		}
@@ -682,10 +686,8 @@ function setFloatLayer(index){
 	//机构发布者
 	var provider_tag = compatibility.getElementsByClassName(floatLayer, 'provider')[0];
 	provider_tag.innerHTML = '发布者：' + courseData.list[index].provider;
-	//分类
+	//分类 categoryName 的数据服务端返回null？？？
 	var category_tag = compatibility.getElementsByClassName(floatLayer, 'category')[0];
-	//分类categoryName的数据服务端返回null？？？，可能会暂时使用targetUser
-	// category_tag.innerHTML = '分类：' + courseData.list[index].targetUser;
 	category_tag.innerHTML = courseData.list[index].categoryName ? ('分类：' + courseData.list[index].categoryName) : '分类：无';
 	//描述
 	var des_tag = compatibility.getElementsByClassName(floatLayer, 'description')[0];

@@ -18,7 +18,7 @@
 	background-color: #f3f3f3;
 }
 .m-ntf>.content {
-	position: absolute; left: 12%;
+	position: absolute; left: 10%;
 	color: #333;
 }
 .m-ntf a {
@@ -28,7 +28,7 @@
 	text-decoration: underline;
 }
 .m-ntf>.wrap {
-	position: absolute; right: 12%;
+	position: absolute; right: 10%;
 }
 .m-ntf .close {
 	display: inline-block;
@@ -56,7 +56,7 @@
 /* tt = title */
 /* fl = follow */
 .m-tt {
-	position: absolute; left: 12%; bottom: 0px;
+	position: absolute; left: 10%; bottom: 0px;
 	font-size: 0;
 }
 .m-tt * {
@@ -92,7 +92,7 @@
 }
 /* 导航区 */
 .m-nav {
-	position: absolute; right: 12%; bottom: 0px;
+	position: absolute; right: 10%; bottom: 0px;
 	font-size: 0;
 }
 .m-nav>ul, .m-nav li, .m-nav>.search {
